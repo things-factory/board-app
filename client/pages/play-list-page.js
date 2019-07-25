@@ -1,15 +1,11 @@
-import { html, css } from 'lit-element'
-import { connect } from 'pwa-helpers/connect-mixin.js'
 import '@material/mwc-fab'
-
+import { fetchPlayGroup, fetchPlayGroupList, leavePlayGroup } from '@things-factory/board-base'
+import { navigate, PageView, PullToRefreshStyles, ScrollbarStyles, store } from '@things-factory/shell'
+import { css, html } from 'lit-element'
 import PullToRefresh from 'pulltorefreshjs'
-
-import { store, navigate, PageView, ScrollbarStyles, PullToRefreshStyles } from '@things-factory/shell'
-
-import { fetchPlayGroupList, fetchPlayGroup, leavePlayGroup } from '@things-factory/board-base'
-
-import '../board-list/play-group-bar'
+import { connect } from 'pwa-helpers/connect-mixin.js'
 import '../board-list/board-tile-list'
+import '../board-list/play-group-bar'
 
 class PlayListPage extends connect(store)(PageView) {
   static get styles() {
