@@ -4,7 +4,7 @@ import '@material/mwc-fab'
 
 import PullToRefresh from 'pulltorefreshjs'
 
-import { store, loadPage, PageView, ScrollbarStyles, PullToRefreshStyles } from '@things-factory/shell'
+import { store, navigate, PageView, ScrollbarStyles, PullToRefreshStyles } from '@things-factory/shell'
 
 import { fetchPlayGroupList, fetchPlayGroup, leavePlayGroup } from '@things-factory/board-base'
 
@@ -85,8 +85,12 @@ class PlayListPage extends connect(store)(PageView) {
 
     if (!this.groupId) {
       let groupId = this.groups && this.groups[0] && this.groups[0].id
+      var newURL = new URL(window.location)
+
+      newURL.pathname += `/${groupId}`
+
       if (groupId) {
-        await store.dispatch(loadPage('play-list', groupId, {}))
+        navigate(newURL, true)
       }
       return
     }
