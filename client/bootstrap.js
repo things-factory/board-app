@@ -53,9 +53,7 @@ export default function bootstrap() {
         position: VIEWPART_POSITION.NAVBAR
       })
     } else {
-      removeViewpart({
-        name: 'board-topmenu'
-      })
+      removeViewpart('board-topmenu')
 
       store.dispatch({
         type: APPEND_CONTEXT_TOOL,
