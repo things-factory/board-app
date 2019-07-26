@@ -2,10 +2,20 @@ import { APPEND_APP_TOOL } from '@things-factory/apptool-base'
 import { APPEND_CONTEXT_TOOL, REMOVE_CONTEXT_TOOL } from '@things-factory/context-base'
 import { appendViewpart, removeViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
 import { addRoutingType } from '@things-factory/menu-base'
-import { store } from '@things-factory/shell'
+import { store, UPDATE_BASE_URL, UPDATE_DEFAULT_ROUTE_PAGE } from '@things-factory/shell'
+
 import { html } from 'lit-html'
 
 export default function bootstrap() {
+  store.dispatch({
+    type: UPDATE_BASE_URL
+  })
+
+  store.dispatch({
+    type: UPDATE_DEFAULT_ROUTE_PAGE,
+    defaultRoutePage: 'board-list'
+  })
+
   store.dispatch(addRoutingType('VIEWER', 'board-viewer'))
   store.dispatch(addRoutingType('PLAYER', 'board-player'))
 
