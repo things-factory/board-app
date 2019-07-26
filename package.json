@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -35,6 +35,8 @@
     "@things-factory/component-ui": "*",
     "@things-factory/context-ui": "*",
     "@things-factory/export-ui": "*",
+    "@things-factory/fav-base": "*",
+    "@things-factory/font-base": "*",
     "@things-factory/form-ui": "*",
     "@things-factory/i18n-ui": "*",
     "@things-factory/import-ui": "*",
