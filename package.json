@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -29,6 +29,9 @@
   },
   "dependencies": {
     "@things-factory/apptool-ui": "*",
+    "@things-factory/auth-base": "*",
+    "@things-factory/auth-provider-jwt": "*",
+    "@things-factory/auth-ui-jwt": "*",
     "@things-factory/board-ui": "*",
     "@things-factory/context-ui": "*",
     "@things-factory/layout-ui": "*",

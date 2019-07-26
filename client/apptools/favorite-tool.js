@@ -58,6 +58,10 @@ export class FavoriteTool extends connect(store)(LitElement) {
   }
 
   async refreshFavorites() {
+    if (!this.user || this.user.email) {
+      return
+    }
+
     const response = await client.query({
       query: gql`
         query {
