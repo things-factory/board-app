@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -44,6 +44,7 @@
     "@things-factory/menu-base": "*",
     "@things-factory/more-ui": "*",
     "@things-factory/offline-ui": "*",
+    "@things-factory/print-service": "^1.0.0-beta",
     "@things-factory/print-ui": "*",
     "@things-factory/screencast-ui": "^1.0.0-beta.9",
     "@things-factory/setting-ui": "*",
