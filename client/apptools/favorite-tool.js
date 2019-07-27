@@ -58,7 +58,7 @@ export class FavoriteTool extends connect(store)(LitElement) {
   }
 
   async refreshFavorites() {
-    if (!this.user || this.user.email) {
+    if (!this.user || !this.user.email) {
       return
     }
 
