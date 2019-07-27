@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -49,7 +49,6 @@
     "@things-factory/screencast-ui": "^1.0.0-beta.9",
     "@things-factory/setting-ui": "*",
     "@things-factory/shell": "*",
-    "@things-factory/simple-ui": "*",
     "@things-factory/system-ui": "*",
     "@things-scene/baidu-map": "*",
     "@things-scene/chartjs": "ThingsElements/things-scene-chartjs#for-things-factory",

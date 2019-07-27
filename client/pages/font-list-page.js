@@ -5,7 +5,7 @@ import '@material/mwc-fab'
 import PullToRefresh from 'pulltorefreshjs'
 
 import { store, loadPage, PageView, PullToRefreshStyles } from '@things-factory/shell'
-import '@things-factory/simple-ui'
+import '@things-factory/grist-ui'
 import '@things-factory/component-ui/component/infinite-scroll/infinite-scroll'
 import { fetchFontList, fetchPlayGroup, leavePlayGroup } from '@things-factory/font-base'
 
@@ -42,13 +42,16 @@ class FontListPage extends connect(store)(PageView) {
     return {
       title: this.menuTitle,
       board_topmenu: true,
-      actions: [{
-        title: 'button.add',
-        action: function(){} 
-      },{
-        title: 'button.remove',
-        action:function(){} 
-      }]
+      actions: [
+        {
+          title: 'button.add',
+          action: function() {}
+        },
+        {
+          title: 'button.remove',
+          action: function() {}
+        }
+      ]
     }
   }
 
