@@ -5,6 +5,9 @@ import { store, UPDATE_BASE_URL, UPDATE_DEFAULT_ROUTE_PAGE } from '@things-facto
 
 import { html } from 'lit-html'
 
+import './viewparts/menu-tools'
+import './apptools/favorite-tool'
+
 export default function bootstrap() {
   store.dispatch({
     type: UPDATE_BASE_URL
@@ -14,8 +17,6 @@ export default function bootstrap() {
     type: UPDATE_DEFAULT_ROUTE_PAGE,
     defaultRoutePage: 'board-list'
   })
-
-  import('./viewparts/menu-tools')
 
   const tool = {
     position: TOOL_POSITION.CENTER,
@@ -66,7 +67,6 @@ export default function bootstrap() {
     }
   })
 
-  import('./apptools/favorite-tool')
   store.dispatch({
     type: APPEND_APP_TOOL,
     tool: {
