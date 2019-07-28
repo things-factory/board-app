@@ -13,8 +13,7 @@ export class FavoriteTool extends connect(store)(LitElement) {
       favorites: Array,
       user: Object,
       resourceId: String,
-      favored: Boolean,
-      routingTypes: Object
+      favored: Boolean
     }
   }
 
@@ -46,10 +45,13 @@ export class FavoriteTool extends connect(store)(LitElement) {
     this.favorites = state.favorite.favorites
     this.user = state.auth.user
     this.resourceId = state.route.resourceId
-    this.routingTypes = state.menu.routingTypes
   }
 
   onclick(event) {
+    if (!this.resourceId) {
+      return
+    }
+
     if (this.favored) {
       this.removeFavorite(this.resourceId)
     } else {
