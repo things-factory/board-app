@@ -56,7 +56,7 @@ export default class BoardTileList extends LitElement {
           display: block;
           text-decoration: none;
           word-wrap: break-word;
-          word-break: break-all;
+          word-break: keep-all;
 
           margin: 0px;
         }
