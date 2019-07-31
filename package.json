@@ -43,7 +43,7 @@
     "@things-factory/layout-ui": "*",
     "@things-factory/more-ui": "*",
     "@things-factory/offline-ui": "*",
-    "@things-factory/print-service": "^1.0.0-beta.2",
+    "@things-factory/print-service": "*",
     "@things-factory/print-ui": "*",
     "@things-factory/screencast-ui": "^1.0.0-beta.9",
     "@things-factory/setting-ui": "*",
