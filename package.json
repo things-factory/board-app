@@ -43,9 +43,9 @@
     "@things-factory/layout-ui": "*",
     "@things-factory/more-ui": "*",
     "@things-factory/offline-ui": "*",
-    "@things-factory/print-service": "^1.0.0-beta.4",
+    "@things-factory/print-service": "*",
     "@things-factory/print-ui": "*",
-    "@things-factory/screencast-ui": "^1.0.0-beta.9",
+    "@things-factory/screencast-ui": "*",
     "@things-factory/setting-ui": "*",
     "@things-factory/shell": "*",
     "@things-factory/system-ui": "*",
@@ -79,7 +79,8 @@
     "@things-scene/table": "*",
     "@things-scene/traffic": "*",
     "@things-scene/visualizer": "ThingsElements/things-scene-visualizer#for-things-factory",
-    "@things-scene/wheel-sorter": "*"
+    "@things-scene/wheel-sorter": "*",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {}
 }
