@@ -1,6 +1,8 @@
 import { LitElement, html, css } from 'lit-element'
-import { fetchBoard, fetchGroupList, createBoard, updateBoard } from '@things-factory/board-base'
+import { navigate } from '@things-factory/shell'
+import { fetchBoard, fetchGroupList, createBoard } from '@things-factory/board-base'
 import { i18next } from '@things-factory/i18n-base'
+import '@material/mwc-icon'
 
 export class BoardInfo extends LitElement {
   static get properties() {
@@ -21,11 +23,21 @@ export class BoardInfo extends LitElement {
           height: 100%;
           overflow: auto;
           padding: 10px;
+
+          position: relative;
         }
 
         h2 {
           text-align: center;
           text-transform: capitalize;
+        }
+
+        [edit] {
+          position: absolute;
+          top: 25px;
+          right: 25px;
+          color: var(--board-info-icon-color, black);
+          font-size: 1.5em;
         }
 
         img {
@@ -45,6 +57,8 @@ export class BoardInfo extends LitElement {
           grid-auto-rows: minmax(24px, auto);
           max-width: var(--form-max-width);
           margin: var(--form-margin);
+
+          align-items: center;
         }
 
         [buttons] {
@@ -79,6 +93,12 @@ export class BoardInfo extends LitElement {
 
           color: var(--label-color);
           font: var(--label-font);
+        }
+
+        span {
+          grid-column: span 8;
+          padding: var(--input-field-padding);
+          font: var(--input-field-font);
         }
 
         input,
@@ -136,6 +156,8 @@ export class BoardInfo extends LitElement {
             text-align: left;
             align-self: end;
           }
+
+          span,
           input,
           table,
           select,
@@ -167,7 +189,13 @@ export class BoardInfo extends LitElement {
     return !board
       ? html``
       : html`
-          <h2>board information</h2>
+          <h2>
+            board information
+          </h2>
+
+          <a .href=${'board-modeller/' + this.boardId} edit>
+            <mwc-icon>edit</mwc-icon>
+          </a>
 
           ${board.thumbnail
             ? html`
@@ -176,14 +204,14 @@ export class BoardInfo extends LitElement {
             : html``}
 
           <form>
-            <label>name</label>
-            <input type="text" .value=${board.name} />
+            <label>${i18next.t('label.name')}</label>
+            <input type="text" .value=${board.name} @change=${e => (this.board.name = e.target.value)} />
 
-            <label>description</label>
-            <input type="text" .value=${board.description} />
+            <label>${i18next.t('label.description')}</label>
+            <input type="text" .value=${board.description} @change=${e => (this.board.description = e.target.value)} />
 
             <label>${i18next.t('label.group')}</label>
-            <select @change=${e => (this.groupId = e.target.value)} .value=${this.groupId}>
+            <select @change=${e => (this.board.groupId = e.target.value)} .value=${this.groupId}>
               <option value="" ?selected=${'' == this.groupId}></option>
               ${boardGroupList.map(
                 item => html`
@@ -192,28 +220,32 @@ export class BoardInfo extends LitElement {
               )}
             </select>
 
-            <label>width</label>
-            <input type="number" .value=${board.width} />
+            <label>${i18next.t('label.creator')}</label>
+            <span>${board.creator && board.creator.name}</span>
 
-            <label>height</label>
-            <input type="number" .value=${board.height} />
+            <label>${i18next.t('label.created-at')}</label>
+            <span>${new Date(Number(board.createdAt)).toLocaleString()}</span>
 
-            <label>created by</label>
-            <input type="text" .value=${board.creator && board.creator.name} />
+            <label>${i18next.t('label.updater')}</label>
+            <span>${board.updater && board.updater.name}</span>
 
-            <label>created at</label>
-            <input type="text" .value=${board.createdAt} />
-
-            <label>updated by</label>
-            <input type="text" .value=${board.updater && board.updater.name} />
-
-            <label>updated at</label>
-            <input type="text" .value=${board.updatedAt} />
+            <label>${i18next.t('label.updated-at')}</label>
+            <span>${new Date(Number(board.updatedAt)).toLocaleString()}</span>
 
             <div buttons>
-              <input type="button" name="save" value="save" />
-              <input type="button" name="create" value="create" />
-              <input type="button" name="delete" value="delete" />
+              <input
+                type="button"
+                name="save"
+                value=${i18next.t('button.save')}
+                @click=${this.updateBoard.bind(this)}
+              />
+              <input type="button" name="create" value=${i18next.t('button.create')} />
+              <input
+                type="button"
+                name="delete"
+                value=${i18next.t('button.delete')}
+                @click=${this.deleteBoard.bind(this)}
+              />
             </div>
           </form>
         `
@@ -227,18 +259,19 @@ export class BoardInfo extends LitElement {
 
   async refresh() {
     if (!this.boardId) {
+      /* model이 없으므로, 기본 모델을 제공함. */
       var board = {
-        width: 800,
-        height: 600,
         groupId: this.groupId,
-        model: JSON.stringify({
+        model: {
           width: 800,
           height: 600
-        })
+        }
       }
     } else {
       var response = await fetchBoard(this.boardId)
       var board = response.board
+      /* model은 변화하지 않으므로, model을 제거함 */
+      delete board.model
     }
 
     this.boardGroupList = (await fetchGroupList()).groups.items
@@ -253,8 +286,7 @@ export class BoardInfo extends LitElement {
     try {
       this.board = (await createBoard({
         ...this.board,
-        groupId: this.groupId,
-        model: this.scene.model
+        groupId: this.groupId
       })).createBoard
 
       document.dispatchEvent(
@@ -279,31 +311,27 @@ export class BoardInfo extends LitElement {
   }
 
   async updateBoard() {
-    try {
-      var board = (await updateBoard({
-        ...this.board,
-        groupId: this.groupId
-      })).updateBoard
+    this.dispatchEvent(
+      new CustomEvent('update-board', {
+        detail: this.board
+      })
+    )
 
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'info',
-            message: 'saved'
-          }
-        })
-      )
-    } catch (ex) {
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'error',
-            message: ex,
-            ex: ex
-          }
-        })
-      )
-    }
+    this.close()
+  }
+
+  async deleteBoard() {
+    this.dispatchEvent(
+      new CustomEvent('delete-board', {
+        detail: this.boardId
+      })
+    )
+
+    this.close()
+  }
+
+  close() {
+    history.back()
   }
 }
 

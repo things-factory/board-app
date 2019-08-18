@@ -1,5 +1,5 @@
 import '@material/mwc-fab'
-import { deleteBoard, fetchBoardList, fetchGroupList } from '@things-factory/board-base'
+import { deleteBoard, updateBoard, fetchBoardList, fetchGroupList } from '@things-factory/board-base'
 import { PageView, PullToRefreshStyles, ScrollbarStyles, store } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import PullToRefresh from 'pulltorefreshjs'
@@ -79,7 +79,6 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
         id="list"
         .boards=${this.boards}
         .favorites=${this.favorites}
-        @delete-board=${e => this.onDeleteBoard(e.detail)}
         @info-board=${e => this.onInfoBoard(e.detail)}
         @scroll=${e => {
           this.onScroll(e)
@@ -204,6 +203,47 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
   }
 
+  async onInfoBoard(boardId) {
+    openOverlay('board-info', {
+      template: html`
+        <board-info
+          .boardId=${boardId}
+          .groups=${this.groups}
+          .groupId=${this.groupId}
+          @update-board=${e => this.onUpdateBoard(e.detail)}
+          @delete-board=${e => this.onDeleteBoard(e.detail)}
+        ></board-info>
+      `
+    })
+  }
+
+  async onUpdateBoard(board) {
+    try {
+      await updateBoard(board)
+
+      document.dispatchEvent(
+        new CustomEvent('notify', {
+          detail: {
+            level: 'info',
+            message: 'saved'
+          }
+        })
+      )
+    } catch (ex) {
+      document.dispatchEvent(
+        new CustomEvent('notify', {
+          detail: {
+            level: 'error',
+            message: ex,
+            ex: ex
+          }
+        })
+      )
+    }
+
+    this.refreshBoards()
+  }
+
   async onDeleteBoard(boardId) {
     try {
       await deleteBoard(boardId)
@@ -229,14 +269,6 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
 
     this.refreshBoards()
-  }
-
-  async onInfoBoard(boardId) {
-    openOverlay('board-info', {
-      template: html`
-        <board-info .boardId=${boardId} .groups=${this.groups} .groupId=${this.groupId}></board-info>
-      `
-    })
   }
 }
 

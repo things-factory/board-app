@@ -77,37 +77,21 @@ export default class BoardTileList extends LitElement {
           height: 80%;
         }
 
-        [edit],
-        [delete],
         [info] {
           opacity: 0.5;
 
           position: absolute;
           margin-top: -25px;
-        }
-
-        [edit] {
           right: 3px;
         }
 
-        [delete] {
-          right: 27px;
-        }
-
-        [info] {
-          right: 51px;
-        }
-
-        [edit] mwc-icon,
-        [delete] mwc-icon,
         [info] mwc-icon {
           color: var(--board-list-tile-icon-color);
           font-size: 1.5em;
           vertical-align: middle;
         }
 
-        li:hover [edit],
-        li:hover [delete] {
+        li:hover [info] {
           opacity: 1;
           -webkit-transition: opacity 0.8s;
           -moz-transition: opacity 0.8s;
@@ -175,21 +159,6 @@ export default class BoardTileList extends LitElement {
                 <a
                   href="#"
                   @click=${e => {
-                    this.deleteBoard(board.id)
-                    e.preventDefault()
-                  }}
-                  delete
-                >
-                  <mwc-icon>delete</mwc-icon>
-                </a>
-
-                <a .href=${'board-modeller/' + board.id} edit>
-                  <mwc-icon>edit</mwc-icon>
-                </a>
-
-                <a
-                  href="#"
-                  @click=${e => {
                     this.infoBoard(board.id)
                     e.preventDefault()
                   }}
@@ -202,14 +171,6 @@ export default class BoardTileList extends LitElement {
         )}
       </ul>
     `
-  }
-
-  deleteBoard(boardId) {
-    this.dispatchEvent(
-      new CustomEvent('delete-board', {
-        detail: boardId
-      })
-    )
   }
 
   infoBoard(boardId) {
