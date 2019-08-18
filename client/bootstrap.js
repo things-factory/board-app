@@ -13,6 +13,16 @@ export default function bootstrap() {
     type: UPDATE_BASE_URL
   })
 
+  appendViewpart({
+    name: 'board-info',
+    viewpart: {
+      show: false,
+      hovering: 'edge',
+      backdrop: true
+    },
+    position: VIEWPART_POSITION.ASIDEBAR
+  })
+
   const tool = {
     position: TOOL_POSITION.CENTER,
     show: true,

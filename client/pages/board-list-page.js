@@ -4,8 +4,12 @@ import { PageView, PullToRefreshStyles, ScrollbarStyles, store } from '@things-f
 import { css, html } from 'lit-element'
 import PullToRefresh from 'pulltorefreshjs'
 import { connect } from 'pwa-helpers/connect-mixin.js'
+import { openOverlay } from '@things-factory/layout-base'
+
 import '../board-list/board-tile-list'
 import '../board-list/group-bar'
+import '../viewparts/board-info'
+
 import InfiniteScrollable from '../mixins/infinite-scrollable'
 
 class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
@@ -76,6 +80,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
         .boards=${this.boards}
         .favorites=${this.favorites}
         @delete-board=${e => this.onDeleteBoard(e.detail)}
+        @info-board=${e => this.onInfoBoard(e.detail)}
         @scroll=${e => {
           this.onScroll(e)
         }}
@@ -95,7 +100,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
   }
 
-  async getBoards({ page = 1, limit = this._infiniteScrollOptions.limit }) {
+  async getBoards({ page = 1, limit = this._infiniteScrollOptions.limit } = {}) {
     var listParam = {
       filters:
         this.groupId && this.groupId !== 'favor'
@@ -145,7 +150,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
       return
     }
 
-    var { items: boards, total } = await this.getBoards()
+    var { items: boards, total } = await this.getBoards({ page: this._page + 1 })
 
     if (this.groupId == 'favor') {
       // FIXME favor 그룹에 대한 fetch 처리를 서버에서 해야한다.
@@ -224,6 +229,14 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
 
     this.refreshBoards()
+  }
+
+  async onInfoBoard(boardId) {
+    openOverlay('board-info', {
+      template: html`
+        <board-info .boardId=${boardId} .groups=${this.groups} .groupId=${this.groupId}></board-info>
+      `
+    })
   }
 }
 
