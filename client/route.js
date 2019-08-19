@@ -11,5 +11,9 @@ export default function route(page) {
     case 'play-list':
       import('./pages/play-list-page')
       return page
+
+    case 'publisher-list':
+      import('./pages/publisher-list-page')
+      return page
   }
 }

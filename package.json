@@ -83,6 +83,9 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@things-factory/board-test": "*"
+    "@things-factory/board-test": "*",
+    "@things-factory/publisher-service": "*",
+    "@things-factory/publisher-ui": "*",
+    "@things-factory/publisher-base": "*"
   }
 }
