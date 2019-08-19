@@ -77,7 +77,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     this._page = 1
     this._total = 0
 
-    this._infiniteScrollOptions.limit = 6
+    this._infiniteScrollOptions.limit = 30
   }
 
   get scrollTargetEl() {
