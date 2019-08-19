@@ -11,6 +11,10 @@ export default {
     {
       tagname: 'play-list-page',
       page: 'play-list'
+    },
+    {
+      tagname: 'publisher-list-page',
+      page: 'publisher-list'
     }
   ],
   bootstrap
