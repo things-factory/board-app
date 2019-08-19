@@ -14,7 +14,7 @@ export default function bootstrap() {
   })
 
   appendViewpart({
-    name: 'board-info',
+    name: 'viewpart-info',
     viewpart: {
       show: false,
       hovering: 'edge',

@@ -1,8 +1,9 @@
 import { css, html, LitElement } from 'lit-element'
 
 import ScrollBooster from 'scrollbooster'
-
 import '@material/mwc-icon'
+
+import { longpressable } from '../utils/longpressable'
 
 export default class GroupBar extends LitElement {
   static get styles() {
@@ -86,7 +87,7 @@ export default class GroupBar extends LitElement {
 
         ${(this.groups || []).map(
           group => html`
-            <li ?active=${this.groupId === group.id}>
+            <li ?active=${this.groupId === group.id} @long-press=${e => this._infoGroup(group.id)}>
               <a href=${`${this.targetPage}/${group.id}`}>${group.name}</a>
             </li>
           `
@@ -95,10 +96,18 @@ export default class GroupBar extends LitElement {
         <li padding></li>
 
         <li add>
-          <mwc-icon @click=${this._onClickAdd.bind(this)}>add</mwc-icon>
+          <mwc-icon @click=${e => this._infoGroup()}>add</mwc-icon>
         </li>
       </ul>
     `
+  }
+
+  _infoGroup(groupId) {
+    this.dispatchEvent(
+      new CustomEvent('info-group', {
+        detail: groupId
+      })
+    )
   }
 
   _onWheelEvent(e) {
@@ -106,10 +115,6 @@ export default class GroupBar extends LitElement {
     this.scrollLeft -= delta * 40
 
     e.preventDefault()
-  }
-
-  _onClickAdd(e) {
-    // TODO Implements
   }
 
   updated(change) {
@@ -121,6 +126,9 @@ export default class GroupBar extends LitElement {
 
   firstUpdated() {
     var scrollTarget = this.shadowRoot.querySelector('ul')
+
+    /* long-press */
+    longpressable(scrollTarget)
 
     scrollTarget.addEventListener('mousewheel', this._onWheelEvent.bind(this), false)
 

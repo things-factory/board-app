@@ -1,6 +1,8 @@
 import { css, html, LitElement } from 'lit-element'
+import ScrollBooster from 'scrollbooster'
 
 import '@material/mwc-icon'
+import { longpressable } from '../utils/longpressable'
 
 export default class PlayGroupBar extends LitElement {
   static get styles() {
@@ -76,7 +78,7 @@ export default class PlayGroupBar extends LitElement {
       <ul>
         ${(this.groups || []).map(
           group => html`
-            <li ?active=${this.groupId === group.id}>
+            <li ?active=${this.groupId === group.id} @long-press=${e => this._infoGroup(group.id)}>
               <a href=${`${this.targetPage}/${group.id}`}>${group.name}</a>
             </li>
           `
@@ -85,10 +87,18 @@ export default class PlayGroupBar extends LitElement {
         <li padding></li>
 
         <li add>
-          <mwc-icon @click=${this._onClickAdd.bind(this)}>add</mwc-icon>
+          <mwc-icon @click=${e => this._infoGroup()}>add</mwc-icon>
         </li>
       </ul>
     `
+  }
+
+  _infoGroup(groupId) {
+    this.dispatchEvent(
+      new CustomEvent('info-play-group', {
+        detail: groupId
+      })
+    )
   }
 
   _onWheelEvent(e) {
@@ -103,7 +113,21 @@ export default class PlayGroupBar extends LitElement {
   }
 
   firstUpdated() {
-    this.addEventListener('mousewheel', this._onWheelEvent.bind(this), false)
+    var scrollTarget = this.shadowRoot.querySelector('ul')
+
+    /* long-press */
+    longpressable(scrollTarget)
+
+    scrollTarget.addEventListener('mousewheel', this._onWheelEvent.bind(this), false)
+
+    this.__sb = new ScrollBooster({
+      viewport: this,
+      content: scrollTarget,
+      mode: 'x',
+      onUpdate: data => {
+        this.scrollLeft = data.position.x
+      }
+    })
   }
 }
 

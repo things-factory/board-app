@@ -1,11 +1,23 @@
 import '@material/mwc-fab'
-import { fetchPlayGroup, fetchPlayGroupList, leavePlayGroup } from '@things-factory/board-base'
+import {
+  fetchPlayGroup,
+  updatePlayGroup,
+  createPlayGroup,
+  deletePlayGroup,
+  fetchPlayGroupList,
+  leavePlayGroup
+} from '@things-factory/board-base'
 import { navigate, PageView, PullToRefreshStyles, ScrollbarStyles, store } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import PullToRefresh from 'pulltorefreshjs'
 import { connect } from 'pwa-helpers/connect-mixin.js'
+import { openOverlay } from '@things-factory/layout-base'
+
 import '../board-list/board-tile-list'
 import '../board-list/play-group-bar'
+
+import '../viewparts/board-info'
+import '../viewparts/play-group-info'
 
 class PlayListPage extends connect(store)(PageView) {
   static get styles() {
@@ -53,11 +65,17 @@ class PlayListPage extends connect(store)(PageView) {
 
   render() {
     return html`
-      <play-group-bar .groups=${this.groups} .groupId=${this.groupId} targetPage="play-list"></play-group-bar>
+      <play-group-bar
+        .groups=${this.groups}
+        .groupId=${this.groupId}
+        targetPage="play-list"
+        @info-play-group=${e => this.onInfoPlayGroup(e.detail)}
+      ></play-group-bar>
 
       <board-tile-list
         .favorites=${this.favorites}
         .boards=${this.boards}
+        @info-board=${e => this.onInfoBoard(e.detail)}
         @delete-board=${e => this.onDeleteBoard(e.detail)}
       ></board-tile-list>
 
@@ -138,6 +156,65 @@ class PlayListPage extends connect(store)(PageView) {
     }
   }
 
+  async onInfoBoard(boardId) {
+    openOverlay('viewpart-info', {
+      template: html`
+        <board-info
+          .boardId=${boardId}
+          .groupId=${this.groupId}
+          @update-board=${e => this.onUpdateBoard(e.detail)}
+          @delete-board=${e => this.onDeleteBoard(e.detail)}
+        ></board-info>
+      `
+    })
+  }
+
+  async onInfoPlayGroup(groupId) {
+    openOverlay('viewpart-info', {
+      template: html`
+        <play-group-info
+          .playGroupId=${groupId}
+          @update-play-group=${e => this.onUpdatePlayGroup(e.detail)}
+          @delete-play-group=${e => this.onDeletePlayGroup(e.detail)}
+          @create-play-group=${e => this.onCreatePlayGroup(e.detail)}
+        ></play-group-info>
+      `
+    })
+  }
+
+  async onCreatePlayGroup(group) {
+    try {
+      await createPlayGroup(group)
+      this._notify('info', 'new playgroup created')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
+  async onUpdatePlayGroup(group) {
+    try {
+      await updatePlayGroup(group)
+      this._notify('info', 'saved')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
+  async onDeletePlayGroup(groupId) {
+    try {
+      await deletePlayGroup(groupId)
+      this._notify('info', 'deleted')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
   async onDeleteBoard(boardId) {
     try {
       await leavePlayGroup(boardId, this.groupId)
@@ -163,6 +240,18 @@ class PlayListPage extends connect(store)(PageView) {
     }
 
     this.refreshBoards()
+  }
+
+  _notify(level, message, ex) {
+    document.dispatchEvent(
+      new CustomEvent('notify', {
+        detail: {
+          level,
+          message,
+          ex
+        }
+      })
+    )
   }
 }
 

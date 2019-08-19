@@ -1,5 +1,13 @@
 import '@material/mwc-fab'
-import { deleteBoard, updateBoard, fetchBoardList, fetchGroupList } from '@things-factory/board-base'
+import {
+  deleteBoard,
+  updateBoard,
+  updateGroup,
+  createGroup,
+  deleteGroup,
+  fetchBoardList,
+  fetchGroupList
+} from '@things-factory/board-base'
 import { PageView, PullToRefreshStyles, ScrollbarStyles, store } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import PullToRefresh from 'pulltorefreshjs'
@@ -8,7 +16,9 @@ import { openOverlay } from '@things-factory/layout-base'
 
 import '../board-list/board-tile-list'
 import '../board-list/group-bar'
+
 import '../viewparts/board-info'
+import '../viewparts/group-info'
 
 import InfiniteScrollable from '../mixins/infinite-scrollable'
 
@@ -73,7 +83,12 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
 
   render() {
     return html`
-      <group-bar .groups=${this.groups} .groupId=${this.groupId} targetPage="board-list"></group-bar>
+      <group-bar
+        .groups=${this.groups}
+        .groupId=${this.groupId}
+        targetPage="board-list"
+        @info-group=${e => this.onInfoGroup(e.detail)}
+      ></group-bar>
 
       <board-tile-list
         id="list"
@@ -85,7 +100,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
         }}
       ></board-tile-list>
 
-      <a id="create" .href=${'board-modeller'}>
+      <a id="create" .href=${'board-modeller'} @click=${e => this.onInfoGroup()}>
         <mwc-fab icon="add" title="create"> </mwc-fab>
       </a>
     `
@@ -204,11 +219,10 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   }
 
   async onInfoBoard(boardId) {
-    openOverlay('board-info', {
+    openOverlay('viewpart-info', {
       template: html`
         <board-info
           .boardId=${boardId}
-          .groups=${this.groups}
           .groupId=${this.groupId}
           @update-board=${e => this.onUpdateBoard(e.detail)}
           @delete-board=${e => this.onDeleteBoard(e.detail)}
@@ -217,28 +231,58 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     })
   }
 
+  async onInfoGroup(groupId) {
+    openOverlay('viewpart-info', {
+      template: html`
+        <group-info
+          .groupId=${groupId}
+          @update-group=${e => this.onUpdateGroup(e.detail)}
+          @delete-group=${e => this.onDeleteGroup(e.detail)}
+          @create-group=${e => this.onCreateGroup(e.detail)}
+        ></group-info>
+      `
+    })
+  }
+
+  async onCreateGroup(group) {
+    try {
+      await createGroup(group)
+      this._notify('info', 'new group created')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
+  async onUpdateGroup(group) {
+    try {
+      await updateGroup(group)
+      this._notify('info', 'saved')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
+  async onDeleteGroup(groupId) {
+    try {
+      await deleteGroup(groupId)
+      this._notify('info', 'deleted')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
   async onUpdateBoard(board) {
     try {
       await updateBoard(board)
-
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'info',
-            message: 'saved'
-          }
-        })
-      )
+      this._notify('info', 'saved')
     } catch (ex) {
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'error',
-            message: ex,
-            ex: ex
-          }
-        })
-      )
+      this._notify('error', ex, ex)
     }
 
     this.refreshBoards()
@@ -247,28 +291,24 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   async onDeleteBoard(boardId) {
     try {
       await deleteBoard(boardId)
-
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'info',
-            message: 'deleted'
-          }
-        })
-      )
+      this._notify('info', 'deleted')
     } catch (ex) {
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'error',
-            message: ex,
-            ex: ex
-          }
-        })
-      )
+      this._notify('error', ex, ex)
     }
 
     this.refreshBoards()
+  }
+
+  _notify(level, message, ex) {
+    document.dispatchEvent(
+      new CustomEvent('notify', {
+        detail: {
+          level,
+          message,
+          ex
+        }
+      })
+    )
   }
 }
 
