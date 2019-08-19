@@ -64,7 +64,7 @@ body {
   --menu-tree-focus-color: #fff;
   --menu-tree-favorite-color: var(--menu-tree-toplevel-color);
 
-  --context-toolbar-background-color: var(--main-section-background-color);
+  --context-toolbar-background-color: var(--primary-background-color);
   --context-toolbar-button-background-color: #fff;
   --context-toolbar-border: 1px solid rgba(57, 78, 100, 0.5);
   --context-toolbar-border-hover: 1px solid var(--primary-color);
