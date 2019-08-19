@@ -1,5 +1,6 @@
 import '@material/mwc-fab'
 import {
+  createBoard,
   deleteBoard,
   updateBoard,
   updateGroup,
@@ -62,8 +63,10 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   }
 
   get context() {
+    var group = this.groups && this.groups.find(group => group.id === this.groupId)
+
     return {
-      title: 'Board List',
+      title: group ? `Board List : ${group.name}` : 'Board List',
       board_topmenu: true
     }
   }
@@ -100,7 +103,14 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
         }}
       ></board-tile-list>
 
-      <a id="create" .href=${'board-modeller'} @click=${e => this.onInfoGroup()}>
+      <a
+        id="create"
+        href="#"
+        @click=${e => {
+          this.onInfoBoard()
+          e.preventDefault()
+        }}
+      >
         <mwc-fab icon="add" title="create"> </mwc-fab>
       </a>
     `
@@ -156,6 +166,8 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
       this._page = 1
       this._total = total
     }
+
+    this.updateContext()
   }
 
   async appendBoards() {
@@ -226,6 +238,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
           .groupId=${this.groupId}
           @update-board=${e => this.onUpdateBoard(e.detail)}
           @delete-board=${e => this.onDeleteBoard(e.detail)}
+          @create-board=${e => this.onCreateBoard(e.detail)}
         ></board-info>
       `
     })
@@ -275,6 +288,18 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
 
     this.refresh()
+  }
+
+  async onCreateBoard(board) {
+    try {
+      await createBoard(board)
+
+      this._notify('info', 'new board created')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refreshBoards()
   }
 
   async onUpdateBoard(board) {

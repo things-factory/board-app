@@ -1,5 +1,6 @@
 import '@material/mwc-fab'
 import {
+  updateBoard,
   fetchPlayGroup,
   updatePlayGroup,
   createPlayGroup,
@@ -57,8 +58,10 @@ class PlayListPage extends connect(store)(PageView) {
   }
 
   get context() {
+    var group = this.groups && this.groups.find(group => group.id === this.groupId)
+
     return {
-      title: 'Play List',
+      title: group ? `Play List : ${group.name}` : 'Play List',
       board_topmenu: true
     }
   }
@@ -110,6 +113,8 @@ class PlayListPage extends connect(store)(PageView) {
     }
 
     this.boards = this.groupId ? (await fetchPlayGroup(this.groupId)).playGroup.boards : []
+
+    this.updateContext()
   }
 
   updated(change) {
@@ -215,31 +220,26 @@ class PlayListPage extends connect(store)(PageView) {
     this.refresh()
   }
 
-  async onDeleteBoard(boardId) {
+  async onUpdateBoard(board) {
     try {
-      await leavePlayGroup(boardId, this.groupId)
-
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'info',
-            message: 'deleted from this group'
-          }
-        })
-      )
+      await updateBoard(board)
+      this._notify('info', 'saved')
     } catch (ex) {
-      document.dispatchEvent(
-        new CustomEvent('notify', {
-          detail: {
-            level: 'error',
-            message: ex,
-            ex: ex
-          }
-        })
-      )
+      this._notify('error', ex, ex)
     }
 
     this.refreshBoards()
+  }
+
+  async onDeleteBoard(boardId) {
+    try {
+      await leavePlayGroup(boardId, this.groupId)
+      this._notify('info', 'deleted from this playgroup')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
   }
 
   _notify(level, message, ex) {

@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -84,8 +84,8 @@
   },
   "devDependencies": {
     "@things-factory/board-test": "*",
+    "@things-factory/publisher-base": "*",
     "@things-factory/publisher-service": "*",
-    "@things-factory/publisher-ui": "*",
-    "@things-factory/publisher-base": "*"
+    "@things-factory/publisher-ui": "*"
   }
 }
