@@ -15,6 +15,7 @@ import '@things-factory/publisher-ui'
 import {
   fetchPublisher,
   fetchPublisherList,
+  updatePublisher,
   deletePublishers
 } from '@things-factory/publisher-base/client/graphql/publisher'
 
@@ -98,6 +99,7 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
           var ids = detail.ids
           this.onDeletePublishers(ids)
         }}
+        @publisher-edited=${e => this.onEditPublisher(e)}
       ></publisher-list>
 
       <mwc-fab id="create" icon="add" title="create" @click=${e => this.showCreatePublisherView()}> </mwc-fab>
@@ -243,6 +245,35 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
     var publisher = detail.publisher
 
     toggleOverlay('create-publisher')
+
+    this.refreshPublishers()
+  }
+
+  async onEditPublisher(e) {
+    var { publisher, data } = e.detail
+
+    try {
+      await updatePublisher(Object.assign({}, publisher, data))
+
+      document.dispatchEvent(
+        new CustomEvent('notify', {
+          detail: {
+            level: 'info',
+            message: 'edited'
+          }
+        })
+      )
+    } catch (ex) {
+      document.dispatchEvent(
+        new CustomEvent('notify', {
+          detail: {
+            level: 'error',
+            message: ex,
+            ex: ex
+          }
+        })
+      )
+    }
 
     this.refreshPublishers()
   }

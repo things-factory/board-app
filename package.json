@@ -84,8 +84,8 @@
   },
   "devDependencies": {
     "@things-factory/board-test": "*",
-    "@things-factory/publisher-base": "*",
-    "@things-factory/publisher-service": "*",
-    "@things-factory/publisher-ui": "*"
+    "@things-factory/publisher-base": "^0.0.12-beta.2",
+    "@things-factory/publisher-service": "^0.0.1-beta.10",
+    "@things-factory/publisher-ui": "^1.0.0-beta.1"
   }
 }
