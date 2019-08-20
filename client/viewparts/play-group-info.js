@@ -18,6 +18,7 @@ export class PlayGroupInfo extends LitElement {
           display: block;
           background-color: white;
           height: 100%;
+          min-width: 50vw;
           overflow: auto;
           padding: 10px;
 
@@ -140,7 +141,7 @@ export class PlayGroupInfo extends LitElement {
 
         @media screen and (max-width: 460px) {
           :host {
-            width: 100%;
+            width: 100vw;
           }
 
           form {
@@ -211,19 +212,30 @@ export class PlayGroupInfo extends LitElement {
         <span>${new Date(Number(playGroup.updatedAt)).toLocaleString()}</span>
 
         <div buttons>
-          <input type="button" name="save" value=${i18next.t('button.save')} @click=${this.updateGroup.bind(this)} />
-          <input
-            type="button"
-            name="create"
-            value=${i18next.t('button.create')}
-            @click=${this.createPlayGroup.bind(this)}
-          />
-          <input
-            type="button"
-            name="delete"
-            value=${i18next.t('button.delete')}
-            @click=${this.deletePlayGroup.bind(this)}
-          />
+          ${this.playGroupId
+            ? html`
+                <input
+                  type="button"
+                  name="save"
+                  value=${i18next.t('button.save')}
+                  @click=${this.updateGroup.bind(this)}
+                />
+
+                <input
+                  type="button"
+                  name="delete"
+                  value=${i18next.t('button.delete')}
+                  @click=${this.deletePlayGroup.bind(this)}
+                />
+              `
+            : html`
+                <input
+                  type="button"
+                  name="create"
+                  value=${i18next.t('button.create')}
+                  @click=${this.createPlayGroup.bind(this)}
+                />
+              `}
         </div>
       </form>
     `

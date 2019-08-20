@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,

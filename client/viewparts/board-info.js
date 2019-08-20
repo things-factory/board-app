@@ -20,6 +20,7 @@ export class BoardInfo extends LitElement {
           display: block;
           background-color: white;
           height: 100%;
+          min-width: 50vw;
           overflow: auto;
           padding: 10px;
 
@@ -142,7 +143,7 @@ export class BoardInfo extends LitElement {
 
         @media screen and (max-width: 460px) {
           :host {
-            width: 100%;
+            width: 100vw;
           }
 
           form {
@@ -230,19 +231,28 @@ export class BoardInfo extends LitElement {
         <span>${new Date(Number(board.updatedAt)).toLocaleString()}</span>
 
         <div buttons>
-          <input type="button" name="save" value=${i18next.t('button.save')} @click=${this.updateBoard.bind(this)} />
-          <input
-            type="button"
-            name="create"
-            value=${i18next.t('button.create')}
-            @click=${this.createBoard.bind(this)}
-          />
-          <input
-            type="button"
-            name="delete"
-            value=${i18next.t('button.delete')}
-            @click=${this.deleteBoard.bind(this)}
-          />
+          ${this.boardId
+            ? html`
+                <input
+                  type="button"
+                  name="save"
+                  value=${i18next.t('button.save')}
+                  @click=${this.updateBoard.bind(this)}
+                /><input
+                  type="button"
+                  name="delete"
+                  value=${i18next.t('button.delete')}
+                  @click=${this.deleteBoard.bind(this)}
+                />
+              `
+            : html`
+                <input
+                  type="button"
+                  name="create"
+                  value=${i18next.t('button.create')}
+                  @click=${this.createBoard.bind(this)}
+                />
+              `}
         </div>
       </form>
     `

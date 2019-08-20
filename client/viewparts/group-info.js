@@ -18,6 +18,7 @@ export class GroupInfo extends LitElement {
           display: block;
           background-color: white;
           height: 100%;
+          min-width: 50vw;
           overflow: auto;
           padding: 10px;
 
@@ -140,7 +141,7 @@ export class GroupInfo extends LitElement {
 
         @media screen and (max-width: 460px) {
           :host {
-            width: 100%;
+            width: 100vw;
           }
 
           form {
@@ -207,19 +208,29 @@ export class GroupInfo extends LitElement {
         <span>${new Date(Number(group.updatedAt)).toLocaleString()}</span>
 
         <div buttons>
-          <input type="button" name="save" value=${i18next.t('button.save')} @click=${this.updateGroup.bind(this)} />
-          <input
-            type="button"
-            name="create"
-            value=${i18next.t('button.create')}
-            @click=${this.createGroup.bind(this)}
-          />
-          <input
-            type="button"
-            name="delete"
-            value=${i18next.t('button.delete')}
-            @click=${this.deleteGroup.bind(this)}
-          />
+          ${this.groupId
+            ? html`
+                <input
+                  type="button"
+                  name="save"
+                  value=${i18next.t('button.save')}
+                  @click=${this.updateGroup.bind(this)}
+                />
+                <input
+                  type="button"
+                  name="delete"
+                  value=${i18next.t('button.delete')}
+                  @click=${this.deleteGroup.bind(this)}
+                />
+              `
+            : html`
+                <input
+                  type="button"
+                  name="create"
+                  value=${i18next.t('button.create')}
+                  @click=${this.createGroup.bind(this)}
+                />
+              `}
         </div>
       </form>
     `
