@@ -7,10 +7,6 @@ import { css, html } from 'lit-element'
 import PullToRefresh from 'pulltorefreshjs'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import InfiniteScrollable from '../mixins/infinite-scrollable'
-// import {
-//   default as PublisherListElement,
-//   CreatePublisher as CreatePublisherElement
-// } from '@things-factory/publisher-ui'
 import '@things-factory/publisher-ui'
 import {
   fetchPublisher,
@@ -131,7 +127,8 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
       }
     }
 
-    return (await fetchPublisherList(listParam)).publishers
+    var result = await fetchPublisherList(listParam)
+    return result.publishers || []
   }
 
   async refreshPublishers() {
@@ -226,14 +223,14 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
     this.stopPublisher(publisher)
   }
 
-  startPublisher(publisher) {
-    publisher.status = 1
-    this.publishers = [...this.publishers]
+  async startPublisher(publisher) {
+    await fetch(`/start-publisher/${publisher.id}`)
+    this.refreshPublishers()
   }
 
-  stopPublisher(publisher) {
-    publisher.status = 0
-    this.publishers = [...this.publishers]
+  async stopPublisher(publisher) {
+    await fetch(`/stop-publisher/${publisher.id}`)
+    this.refreshPublishers()
   }
 
   showCreatePublisherView() {
