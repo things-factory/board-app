@@ -9,7 +9,7 @@ import {
   fetchBoardList,
   fetchGroupList
 } from '@things-factory/board-base'
-import { PageView, ScrollbarStyles, store, pulltorefresh } from '@things-factory/shell'
+import { PageView, ScrollbarStyles, store, pulltorefresh, navigate } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import { openOverlay } from '@things-factory/layout-base'
@@ -21,6 +21,7 @@ import '../viewparts/board-info'
 import '../viewparts/group-info'
 
 import InfiniteScrollable from '../mixins/infinite-scrollable'
+import SwipeListener from 'swipe-listener'
 
 class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   static get styles() {
@@ -76,10 +77,6 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     this._total = 0
 
     this._infiniteScrollOptions.limit = 30
-  }
-
-  get scrollTargetEl() {
-    return this.renderRoot.querySelector('#list')
   }
 
   render() {
@@ -149,6 +146,10 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     return (await fetchBoardList(listParam)).boards
   }
 
+  get scrollTargetEl() {
+    return this.shadowRoot.querySelector('board-tile-list')
+  }
+
   async refreshBoards() {
     if (!this.groups) {
       await this.refresh()
@@ -197,6 +198,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   }
 
   stateChanged(state) {
+    this.page = state.route.page
     this.groupId = state.route.resourceId
     this.favorites = state.favorite.favorites
   }
@@ -210,9 +212,27 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   firstUpdated() {
     pulltorefresh({
       container: this.shadowRoot,
-      scrollable: this.shadowRoot.querySelector('board-tile-list'),
+      scrollable: this.scrollTargetEl,
       refresh: () => {
         return this.refresh()
+      }
+    })
+
+    SwipeListener(this)
+
+    this.addEventListener('swipe', e => {
+      var directions = e.detail.directions
+      var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]
+      var currentIndex = groups.findIndex(group => group.id == this.groupId)
+
+      if (directions.left) {
+        var lastIndex = groups.length - 1
+
+        if (currentIndex < lastIndex) {
+          navigate(`${this.page}/${groups[currentIndex + 1].id}`)
+        }
+      } else if (directions.right && currentIndex != 0) {
+        navigate(`${this.page}/${groups[currentIndex - 1].id}`)
       }
     })
   }

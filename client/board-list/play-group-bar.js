@@ -2,7 +2,7 @@ import { css, html, LitElement } from 'lit-element'
 import ScrollBooster from 'scrollbooster'
 
 import '@material/mwc-icon'
-import { longpressable } from '../utils/longpressable'
+import { longpressable } from '@things-factory/shell'
 
 export default class PlayGroupBar extends LitElement {
   static get styles() {

@@ -18,6 +18,7 @@ import '../board-list/play-group-bar'
 
 import '../viewparts/board-info'
 import '../viewparts/play-group-info'
+import SwipeListener from 'swipe-listener'
 
 class PlayListPage extends connect(store)(PageView) {
   static get styles() {
@@ -127,6 +128,7 @@ class PlayListPage extends connect(store)(PageView) {
 
   stateChanged(state) {
     if (this.active) {
+      this.page = state.route.page
       this.groupId = state.route.resourceId
       this.favorites = state.favorite.favorites
     }
@@ -144,6 +146,24 @@ class PlayListPage extends connect(store)(PageView) {
       scrollable: this.shadowRoot.querySelector('board-tile-list'),
       refresh: () => {
         return this.refresh()
+      }
+    })
+
+    SwipeListener(this)
+
+    this.addEventListener('swipe', e => {
+      var directions = e.detail.directions
+      var groups = this.groups
+      var currentIndex = groups.findIndex(group => group.id == this.groupId)
+
+      if (directions.left) {
+        var lastIndex = groups.length - 1
+
+        if (currentIndex < lastIndex) {
+          navigate(`${this.page}/${groups[currentIndex + 1].id}`)
+        }
+      } else if (directions.right && currentIndex != 0) {
+        navigate(`${this.page}/${groups[currentIndex - 1].id}`)
       }
     })
   }
