@@ -112,6 +112,13 @@ export default class PlayGroupBar extends LitElement {
     // TODO Implements
   }
 
+  updated(change) {
+    if (change.has('groups')) {
+      /* groups가 바뀔 때마다, contents의 폭이 달라지므로, 다시 폭을 계산해준다. */
+      this.__sb && this.__sb.updateMetrics()
+    }
+  }
+
   firstUpdated() {
     var scrollTarget = this.shadowRoot.querySelector('ul')
 
