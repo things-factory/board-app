@@ -2,9 +2,8 @@ import '@material/mwc-button'
 import '@material/mwc-fab'
 import '@material/mwc-icon'
 import { appendViewpart, toggleOverlay, openPopup, VIEWPART_POSITION } from '@things-factory/layout-base'
-import { PageView, PullToRefreshStyles, ScrollbarStyles, store } from '@things-factory/shell'
+import { PageView, ScrollbarStyles, store, pulltorefresh } from '@things-factory/shell'
 import { css, html } from 'lit-element'
-import PullToRefresh from 'pulltorefreshjs'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import InfiniteScrollable from '../mixins/infinite-scrollable'
 import '@things-factory/publisher-ui'
@@ -19,7 +18,6 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
   static get styles() {
     return [
       ScrollbarStyles,
-      PullToRefreshStyles,
       css`
         :host {
           display: flex;
@@ -161,27 +159,16 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
     if (active) {
       this.refreshPublishers()
     }
+  }
 
-    if (active) {
-      await this.updateComplete
-      /*
-       * 첫번째 active 시에는 element가 생성되어있지 않으므로,
-       * 꼭 updateComplete를 기다린 후에 mainElement설정을 해야한다.
-       */
-      this._ptr = PullToRefresh.init({
-        mainElement: this.scrollTargetEl,
-        distIgnore: 30,
-        instructionsPullToRefresh: 'Pull down to refresh',
-        instructionsRefreshing: 'Refreshing',
-        instructionsReleaseToRefresh: 'Release to refresh',
-        onRefresh: () => {
-          this.refresh()
-        }
-      })
-    } else {
-      this._ptr && this._ptr.destroy()
-      delete this._ptr
-    }
+  firstUpdated() {
+    pulltorefresh({
+      container: this.shadowRoot,
+      scrollable: this.scrollTargetEl,
+      refresh: () => {
+        return this.refresh()
+      }
+    })
   }
 
   async onDeletePublishers(publisherIds) {

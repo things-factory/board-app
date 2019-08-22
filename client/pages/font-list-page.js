@@ -2,9 +2,7 @@ import { html, css } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import '@material/mwc-fab'
 
-import PullToRefresh from 'pulltorefreshjs'
-
-import { store, loadPage, PageView, PullToRefreshStyles } from '@things-factory/shell'
+import { store, loadPage, PageView, pulltorefresh } from '@things-factory/shell'
 import '@things-factory/grist-ui'
 import '@things-factory/component-ui/component/infinite-scroll/infinite-scroll'
 import { fetchFontList, fetchPlayGroup, leavePlayGroup } from '@things-factory/font-base'
@@ -15,7 +13,6 @@ import '../board-list/font-list'
 class FontListPage extends connect(store)(PageView) {
   static get styles() {
     return [
-      PullToRefreshStyles,
       css`
         :host {
           display: flex;
@@ -73,27 +70,16 @@ class FontListPage extends connect(store)(PageView) {
     if (active) {
       !this.groups && this.refreshBoards()
     }
+  }
 
-    if (active) {
-      await this.updateComplete
-      /*
-       * 첫번째 active 시에는 element가 생성되어있지 않으므로,
-       * 꼭 updateComplete를 기다린 후에 mainElement설정을 해야한다.
-       */
-      this._ptr = PullToRefresh.init({
-        mainElement: this.shadowRoot.querySelector('font-list'),
-        distIgnore: 30,
-        // instructionsPullToRefresh: 'uuu' /* Pull down to refresh */,
-        // instructionsRefreshing: 'xxx' /* Refreshing */,
-        // instructionsReleaseToRefresh: 'yyy' /* Release to refresh */,
-        onRefresh: () => {
-          this.refresh()
-        }
-      })
-    } else {
-      this._ptr && this._ptr.destroy()
-      delete this._ptr
-    }
+  firstUpdated() {
+    pulltorefresh({
+      container: this.shadowRoot,
+      scrollable: this.shadowRoot.querySelector('font-list'),
+      refresh: () => {
+        return this.refresh()
+      }
+    })
   }
 
   async onDeleteBoard(boardId) {
