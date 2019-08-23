@@ -132,7 +132,7 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
   async refreshPublishers() {
     var { items: publishers, total } = await this.getPublishers()
 
-    this.publishers = publishers
+    this.publishers = [...publishers]
     this._page = 1
     this._total = total
   }

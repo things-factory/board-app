@@ -1,27 +1,25 @@
 import '@material/mwc-fab'
 import {
   createBoard,
-  deleteBoard,
-  updateBoard,
-  updateGroup,
   createGroup,
+  deleteBoard,
   deleteGroup,
   fetchBoardList,
-  fetchGroupList
+  fetchGroupList,
+  updateBoard,
+  updateGroup
 } from '@things-factory/board-base'
-import { PageView, ScrollbarStyles, store, pulltorefresh, navigate } from '@things-factory/shell'
+import { openOverlay } from '@things-factory/layout-base'
+import { navigate, PageView, pulltorefresh, ScrollbarStyles, store } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
-import { openOverlay } from '@things-factory/layout-base'
-
+import SwipeListener from 'swipe-listener'
 import '../board-list/board-tile-list'
 import '../board-list/group-bar'
-
+import { fetchFavoriteBoardList } from '../graphql/favorite-board'
+import InfiniteScrollable from '../mixins/infinite-scrollable'
 import '../viewparts/board-info'
 import '../viewparts/group-info'
-
-import InfiniteScrollable from '../mixins/infinite-scrollable'
-import SwipeListener from 'swipe-listener'
 
 class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   static get styles() {
@@ -120,17 +118,22 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   }
 
   async getBoards({ page = 1, limit = this._infiniteScrollOptions.limit } = {}) {
+    if (this.groupId && this.groupId == 'favor')
+      return await this.getFavoriteBoards({
+        page,
+        limit
+      })
+
     var listParam = {
-      filters:
-        this.groupId && this.groupId !== 'favor'
-          ? [
-              {
-                name: 'group_id',
-                operator: 'eq',
-                value: this.groupId
-              }
-            ]
-          : [],
+      filters: this.groupId
+        ? [
+            {
+              name: 'group_id',
+              operator: 'eq',
+              value: this.groupId
+            }
+          ]
+        : [],
       sortings: [
         {
           name: 'name',
@@ -146,6 +149,17 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     return (await fetchBoardList(listParam)).boards
   }
 
+  async getFavoriteBoards({ page = 1, limit = this._infiniteScrollOptions.limit } = {}) {
+    var listParam = {
+      pagination: {
+        page,
+        limit
+      }
+    }
+
+    return (await fetchFavoriteBoardList(listParam)).favoriteBoards
+  }
+
   get scrollTargetEl() {
     return this.shadowRoot.querySelector('board-tile-list')
   }
@@ -157,14 +171,9 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
 
     var { items: boards, total } = await this.getBoards()
-    if (this.groupId == 'favor') {
-      // FIXME favor 그룹에 대한 fetch 처리를 서버에서 해야한다.
-      this.boards = boards.filter(board => this.favorites.includes(board.id))
-    } else {
-      this.boards = boards
-      this._page = 1
-      this._total = total
-    }
+    this.boards = boards
+    this._page = 1
+    this._total = total
 
     this.updateContext()
   }
@@ -176,15 +185,9 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
 
     var { items: boards, total } = await this.getBoards({ page: this._page + 1 })
-
-    if (this.groupId == 'favor') {
-      // FIXME favor 그룹에 대한 fetch 처리를 서버에서 해야한다.
-      this.boards = boards.filter(board => this.favorites.includes(board.id))
-    } else {
-      this.boards = [...this.boards, ...boards]
-      this._page = this._page + 1
-      this._total = total
-    }
+    this.boards = [...this.boards, ...boards]
+    this._page = this._page + 1
+    this._total = total
   }
 
   async scrollAction() {
