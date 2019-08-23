@@ -141,17 +141,19 @@ class PlayListPage extends connect(store)(PageView) {
   }
 
   firstUpdated() {
+    var scrollTargetEl = this.shadowRoot.querySelector('board-tile-list')
+
     pulltorefresh({
       container: this.shadowRoot,
-      scrollable: this.shadowRoot.querySelector('board-tile-list'),
+      scrollable: scrollTargetEl,
       refresh: () => {
         return this.refresh()
       }
     })
 
-    SwipeListener(this)
+    SwipeListener(scrollTargetEl)
 
-    this.addEventListener('swipe', e => {
+    scrollTargetEl.addEventListener('swipe', e => {
       var directions = e.detail.directions
       var groups = this.groups
       var currentIndex = groups.findIndex(group => group.id == this.groupId)

@@ -218,9 +218,9 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
       }
     })
 
-    SwipeListener(this)
+    SwipeListener(this.scrollTargetEl)
 
-    this.addEventListener('swipe', e => {
+    this.scrollTargetEl.addEventListener('swipe', e => {
       var directions = e.detail.directions
       var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]
       var currentIndex = groups.findIndex(group => group.id == this.groupId)
