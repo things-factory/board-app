@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
-import { fetchBoard, fetchGroupList } from '@things-factory/board-base'
+import gql from 'graphql-tag'
+import { client } from '@things-factory/shell'
 import { i18next } from '@things-factory/i18n-base'
 import '@material/mwc-icon'
 
@@ -117,15 +118,12 @@ export class BoardInfo extends LitElement {
         input[type='checkbox'],
         input[type='radio'] {
           justify-self: end;
-          align-self: start;
+          align-self: center;
           grid-column: span 3 / auto;
-          position: relative;
-          left: 17px;
         }
 
         input[type='checkbox'] + label,
         input[type='radio'] + label {
-          padding-left: 17px;
           text-align: left;
           grid-column: span 9 / auto;
 
@@ -183,8 +181,21 @@ export class BoardInfo extends LitElement {
   }
 
   render() {
-    var board = this.board || { name: '', description: '' }
+    var board = this.board || { name: '', description: '', playGroups: [] }
     var boardGroupList = this.boardGroupList || []
+    var playGroupList = (this.playGroupList || []).map(group => {
+      return {
+        ...group,
+        checked: false
+      }
+    })
+
+    board.playGroups.map(group => {
+      var playGroup = playGroupList.find(g => g.id == group.id)
+      if (playGroup) {
+        playGroup.checked = true
+      }
+    })
 
     return html`
       <h2>
@@ -202,58 +213,78 @@ export class BoardInfo extends LitElement {
         : html``}
 
       <form>
-        <label>${i18next.t('label.name')}</label>
-        <input type="text" .value=${board.name} @change=${e => (this.board.name = e.target.value)} />
+        <fieldset>
+          <legend>${i18next.t('label.information')}</legend>
+          <label>${i18next.t('label.name')}</label>
+          <input type="text" .value=${board.name} @change=${e => (this.board.name = e.target.value)} />
 
-        <label>${i18next.t('label.description')}</label>
-        <input type="text" .value=${board.description} @change=${e => (this.board.description = e.target.value)} />
+          <label>${i18next.t('label.description')}</label>
+          <input type="text" .value=${board.description} @change=${e => (this.board.description = e.target.value)} />
 
-        <label>${i18next.t('label.group')}</label>
-        <select @change=${e => (this.board.groupId = e.target.value)} .value=${this.groupId}>
-          <option value="" ?selected=${'' == this.groupId}></option>
-          ${boardGroupList.map(
+          <label>${i18next.t('label.group')}</label>
+          <select @change=${e => (this.board.groupId = e.target.value)} .value=${this.groupId}>
+            <option value="" ?selected=${'' == this.groupId}></option>
+            ${boardGroupList.map(
+              item => html`
+                <option .value=${item.id} ?selected=${item.id == this.groupId}>${item.name}</option>
+              `
+            )}
+          </select>
+          <label>${i18next.t('label.creator')}</label>
+          <span>${board.creator && board.creator.name}</span>
+
+          <label>${i18next.t('label.created-at')}</label>
+          <span>${new Date(Number(board.createdAt)).toLocaleString()}</span>
+
+          <label>${i18next.t('label.updater')}</label>
+          <span>${board.updater && board.updater.name}</span>
+
+          <label>${i18next.t('label.updated-at')}</label>
+          <span>${new Date(Number(board.updatedAt)).toLocaleString()}</span>
+
+          <div buttons>
+            ${this.boardId
+              ? html`
+                  <input
+                    type="button"
+                    name="save"
+                    value=${i18next.t('button.save')}
+                    @click=${this.updateBoard.bind(this)}
+                  /><input
+                    type="button"
+                    name="delete"
+                    value=${i18next.t('button.delete')}
+                    @click=${this.deleteBoard.bind(this)}
+                  />
+                `
+              : html`
+                  <input
+                    type="button"
+                    name="create"
+                    value=${i18next.t('button.create')}
+                    @click=${this.createBoard.bind(this)}
+                  />
+                `}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>${i18next.t('label.play-group')}</legend>
+
+          ${playGroupList.map(
             item => html`
-              <option .value=${item.id} ?selected=${item.id == this.groupId}>${item.name}</option>
+              <input
+                type="checkbox"
+                value=${item.id}
+                .checked=${item.checked}
+                @change=${e => {
+                  e.target.checked ? this.joinPlayGroup(item.id) : this.leavePlayGroup(item.id)
+                }}
+              />
+              <label>${item.name}</label>
             `
           )}
-        </select>
-
-        <label>${i18next.t('label.creator')}</label>
-        <span>${board.creator && board.creator.name}</span>
-
-        <label>${i18next.t('label.created-at')}</label>
-        <span>${new Date(Number(board.createdAt)).toLocaleString()}</span>
-
-        <label>${i18next.t('label.updater')}</label>
-        <span>${board.updater && board.updater.name}</span>
-
-        <label>${i18next.t('label.updated-at')}</label>
-        <span>${new Date(Number(board.updatedAt)).toLocaleString()}</span>
-
-        <div buttons>
-          ${this.boardId
-            ? html`
-                <input
-                  type="button"
-                  name="save"
-                  value=${i18next.t('button.save')}
-                  @click=${this.updateBoard.bind(this)}
-                /><input
-                  type="button"
-                  name="delete"
-                  value=${i18next.t('button.delete')}
-                  @click=${this.deleteBoard.bind(this)}
-                />
-              `
-            : html`
-                <input
-                  type="button"
-                  name="create"
-                  value=${i18next.t('button.create')}
-                  @click=${this.createBoard.bind(this)}
-                />
-              `}
-        </div>
+        </fieldset>
       </form>
     `
   }
@@ -275,16 +306,72 @@ export class BoardInfo extends LitElement {
         }
       }
     } else {
-      var response = await fetchBoard(this.boardId)
+      var response = (await client.query({
+        query: gql`
+          query FetchBoardById($id: String!) {
+            board(id: $id) {
+              id
+              name
+              description
+              group {
+                id
+                name
+              }
+              playGroups {
+                id
+                name
+              }
+              thumbnail
+              createdAt
+              creator {
+                id
+                name
+              }
+              updatedAt
+              updater {
+                id
+                name
+              }
+            }
+          }
+        `,
+        variables: { id: this.boardId }
+      })).data
+
       var board = response.board
-      /* model은 변화하지 않으므로, model을 제거함 */
-      delete board.model
     }
 
-    this.boardGroupList = (await fetchGroupList()).groups.items
+    this.boardGroupList = (await client.query({
+      query: gql`
+        {
+          groups {
+            items {
+              id
+              name
+              description
+            }
+          }
+        }
+      `
+    })).data.groups.items
     if (board.group) {
       this.groupId = board.group.id
     }
+
+    this.playGroupList = (await client.query({
+      query: gql`
+        {
+          playGroups {
+            items {
+              id
+              name
+              description
+            }
+            total
+          }
+        }
+      `
+    })).data.playGroups.items
 
     this.board = board
   }
@@ -317,6 +404,28 @@ export class BoardInfo extends LitElement {
     )
 
     this.close()
+  }
+
+  async joinPlayGroup(groupId) {
+    this.dispatchEvent(
+      new CustomEvent('join-playgroup', {
+        detail: {
+          boardId: this.boardId,
+          playGroupId: groupId
+        }
+      })
+    )
+  }
+
+  async leavePlayGroup(groupId) {
+    this.dispatchEvent(
+      new CustomEvent('leave-playgroup', {
+        detail: {
+          boardId: this.boardId,
+          playGroupId: groupId
+        }
+      })
+    )
   }
 
   close() {

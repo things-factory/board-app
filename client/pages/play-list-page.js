@@ -1,4 +1,5 @@
 import '@material/mwc-fab'
+import gql from 'graphql-tag'
 import {
   updateBoard,
   fetchPlayGroup,
@@ -8,7 +9,7 @@ import {
   fetchPlayGroupList,
   leavePlayGroup
 } from '@things-factory/board-base'
-import { navigate, PageView, ScrollbarStyles, store, pulltorefresh } from '@things-factory/shell'
+import { navigate, PageView, ScrollbarStyles, store, pulltorefresh, client } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import { openOverlay } from '@things-factory/layout-base'
@@ -178,6 +179,8 @@ class PlayListPage extends connect(store)(PageView) {
           .groupId=${this.groupId}
           @update-board=${e => this.onUpdateBoard(e.detail)}
           @delete-board=${e => this.onDeleteBoard(e.detail)}
+          @join-playgroup=${e => this.onJoinPlayGroup(e.detail)}
+          @leave-playgroup=${e => this.onLeavePlayGroup(e.detail)}
         ></board-info>
       `
     })
@@ -244,6 +247,54 @@ class PlayListPage extends connect(store)(PageView) {
     try {
       await leavePlayGroup(boardId, this.groupId)
       this._notify('info', 'deleted from this playgroup')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
+  async onJoinPlayGroup({ boardId, playGroupId }) {
+    try {
+      await client.mutate({
+        mutation: gql`
+          mutation JoinPlayGroup($id: String!, $boardIds: [String]!) {
+            joinPlayGroup(id: $id, boardIds: $boardIds) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: playGroupId,
+          boardIds: [boardId]
+        }
+      })
+
+      this._notify('info', 'joined playgroup')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+
+    this.refresh()
+  }
+
+  async onLeavePlayGroup({ boardId, playGroupId }) {
+    try {
+      await client.mutate({
+        mutation: gql`
+          mutation($id: String!, $boardIds: [String]!) {
+            leavePlayGroup(id: $id, boardIds: $boardIds) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: playGroupId,
+          boardIds: [boardId]
+        }
+      })
+
+      this._notify('info', 'leaved playgroup')
     } catch (ex) {
       this._notify('error', ex, ex)
     }

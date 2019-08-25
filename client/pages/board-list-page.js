@@ -1,4 +1,6 @@
 import '@material/mwc-fab'
+import gql from 'graphql-tag'
+
 import {
   createBoard,
   createGroup,
@@ -10,7 +12,7 @@ import {
   updateGroup
 } from '@things-factory/board-base'
 import { openOverlay } from '@things-factory/layout-base'
-import { navigate, PageView, pulltorefresh, ScrollbarStyles, store } from '@things-factory/shell'
+import { navigate, PageView, pulltorefresh, ScrollbarStyles, store, client } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import SwipeListener from 'swipe-listener'
@@ -249,6 +251,8 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
           @update-board=${e => this.onUpdateBoard(e.detail)}
           @delete-board=${e => this.onDeleteBoard(e.detail)}
           @create-board=${e => this.onCreateBoard(e.detail)}
+          @join-playgroup=${e => this.onJoinPlayGroup(e.detail)}
+          @leave-playgroup=${e => this.onLeavePlayGroup(e.detail)}
         ></board-info>
       `
     })
@@ -332,6 +336,50 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
 
     this.refreshBoards()
+  }
+
+  async onJoinPlayGroup({ boardId, playGroupId }) {
+    try {
+      await client.mutate({
+        mutation: gql`
+          mutation JoinPlayGroup($id: String!, $boardIds: [String]!) {
+            joinPlayGroup(id: $id, boardIds: $boardIds) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: playGroupId,
+          boardIds: [boardId]
+        }
+      })
+
+      this._notify('info', 'joined playgroup')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
+  }
+
+  async onLeavePlayGroup({ boardId, playGroupId }) {
+    try {
+      await client.mutate({
+        mutation: gql`
+          mutation($id: String!, $boardIds: [String]!) {
+            leavePlayGroup(id: $id, boardIds: $boardIds) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: playGroupId,
+          boardIds: [boardId]
+        }
+      })
+
+      this._notify('info', 'leaved playgroup')
+    } catch (ex) {
+      this._notify('error', ex, ex)
+    }
   }
 
   _notify(level, message, ex) {
