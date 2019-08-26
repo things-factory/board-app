@@ -72,13 +72,16 @@ export default function bootstrap() {
     }
   })
 
+  var acceptedPages = ['board-viewer']
+
   store.dispatch({
     type: APPEND_APP_TOOL,
     tool: {
       template: html`
-        <favorite-tool></favorite-tool>
+        <favorite-tool .acceptedPages=${acceptedPages}></favorite-tool>
       `,
       position: TOOL_POSITION.REAR
-    }
+    },
+    context: 'favoritable'
   })
 }

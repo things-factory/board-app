@@ -13,7 +13,8 @@ export class FavoriteTool extends connect(store)(LitElement) {
       favorites: Array,
       user: Object,
       resourceId: String,
-      favored: Boolean
+      favored: Boolean,
+      acceptedPages: Array
     }
   }
 
@@ -28,9 +29,13 @@ export class FavoriteTool extends connect(store)(LitElement) {
   }
 
   render() {
-    return html`
-      <mwc-icon @click=${this.onclick.bind(this)}>${this.favored ? 'star' : 'star_border'}</mwc-icon>
-    `
+    var renderable = (this.acceptedPages || []).indexOf(this.page) !== -1
+
+    return renderable
+      ? html`
+          <mwc-icon @click=${this.onclick.bind(this)}>${this.favored ? 'star' : 'star_border'}</mwc-icon>
+        `
+      : html``
   }
 
   updated(changes) {
@@ -42,6 +47,7 @@ export class FavoriteTool extends connect(store)(LitElement) {
   }
 
   stateChanged(state) {
+    this.page = state.route.page
     this.favorites = state.favorite.favorites
     this.user = state.auth.user
     this.resourceId = state.route.resourceId
