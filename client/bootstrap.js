@@ -81,7 +81,6 @@ export default function bootstrap() {
         <favorite-tool .acceptedPages=${acceptedPages}></favorite-tool>
       `,
       position: TOOL_POSITION.REAR
-    },
-    context: 'favoritable'
+    }
   })
 }
