@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.1.45",
+  "version": "0.1.46",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -31,6 +31,7 @@
     "@things-factory/apptool-ui": "*",
     "@things-factory/auth-provider-jwt": "*",
     "@things-factory/auth-ui-jwt": "*",
+    "@things-factory/board-service": "*",
     "@things-factory/board-ui": "*",
     "@things-factory/component-ui": "*",
     "@things-factory/context-ui": "*",

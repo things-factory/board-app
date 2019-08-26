@@ -1,6 +1,6 @@
 import { buildQuery, ListParam } from '@things-factory/shell'
 import { getRepository } from 'typeorm'
-import { Board } from '@things-factory/board-base'
+import { Board } from '@things-factory/board-service'
 import { Favorite } from '@things-factory/fav-base'
 
 export const favoritesBoardsResolver = {

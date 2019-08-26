@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
-import { fetchGroup } from '@things-factory/board-base'
+import { fetchGroup } from '../graphql'
 import { i18next } from '@things-factory/i18n-base'
 import '@material/mwc-icon'
 

@@ -8,7 +8,7 @@ import {
   deletePlayGroup,
   fetchPlayGroupList,
   leavePlayGroup
-} from '@things-factory/board-base'
+} from '../graphql'
 import { navigate, PageView, ScrollbarStyles, store, pulltorefresh, client } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
