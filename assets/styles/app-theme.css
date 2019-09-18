@@ -47,6 +47,11 @@ body {
   --group-bar-active-line-color: var(--focus-color);
   --group-bar-line: solid 3px rgba(0, 0, 0, 0.2);
 
+  --menu-bar-background-color: var(--primary-color);
+  --menu-bar-textbutton: 16px/32px var(--theme-font);
+  --menu-bar-textbutton-active: bold var(--menu-bar-textbutton);
+  --menu-bar-active-line-color: var(--focus-color);
+  --menu-bar-line: solid 3px rgba(0, 0, 0, 0.2);
   --menu-tools-background-color: var(--secondary-color);
   --menu-tools-iconbutton-size: var(--icon-tiny-size);
   --menu-tools-color: #87cfd0;
@@ -64,7 +69,7 @@ body {
   --menu-tree-focus-color: #fff;
   --menu-tree-favorite-color: var(--menu-tree-toplevel-color);
 
-  --context-toolbar-background-color: var(--primary-background-color);
+  --context-toolbar-background-color: var(--main-section-background-color);
   --context-toolbar-button-background-color: #fff;
   --context-toolbar-border: 1px solid rgba(57, 78, 100, 0.5);
   --context-toolbar-border-hover: 1px solid var(--primary-color);
@@ -193,6 +198,7 @@ body {
   --grist-object-editor-color: var(--secondary-color);
 
   --data-list-background-color: var(--main-section-background-color);
+  --data-list-item-margin: 5px 0 5px 10px;
   --data-list-item-padding: 5px 15px;
   --data-list-item-border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   --data-list-item-name-font: bold 1em/1em var(--theme-font);
@@ -201,6 +207,41 @@ body {
   --data-list-item-disc-color: var(--secondary-text-color);
   --data-list-item-etc-font: normal 0.7em/0.7em var(--theme-font);
   --data-list-item-etc-color: #585858;
+  --data-list-item-icon-font: normal 1em/1em;
+  --data-list-item-icon-color: var(--secondary-text-color);
+  --data-list-selected-background-color: var(--grid-record-selected-background-color);
+  --data-list-fab-position-horizontal: 15px;
+  --data-list-fab-position-vertical: 15px;
+  --data-list-fab-color: var(--primary-color);
+  --data-list-fab-shadow: var(--box-shadow);
+
+  --grist-input-zoom: 1;
+  --grist-input-progress-border: 1px solid rgba(255, 255, 255, 0.5);
+  --grist-input-progress-background: rgba(0, 0, 0, 0.1);
+  --grist-input-progress-bar-background: #4ac5fd;
+  --grist-input-progress-bar-color: #fff;
+
+  --record-view-header-height: var(--header-bar-height);
+  --record-view-header-background: var(--header-bar-background-color);
+  --record-view-header-color: #fff;
+  --record-view-header-font: var(--header-bar-title);
+  --record-view-footer-height: var(--context-toolbar-button-height);
+  --record-view-footer-background: #fff;
+  --record-view-footer-button-width: 48px;
+  --record-view-footer-button-height: var(--context-toolbar-button-height);
+  --record-view-footer-button-padding: 0 9px;
+  --record-view-footer-button-color: var(--secondary-color);
+  --record-view-footer-iconbutton-size: 16px;
+
+  --record-view-background-color: var(--main-section-background-color);
+  --record-view-label-font: bold 15px var(--theme-font);
+  --record-view-label-color: var(--secondary-color);
+  --record-view-font: normal 15px var(--theme-font);
+  --record-view-color: var(--secondary-color);
+  --record-view-focus-color: var(--primary-color);
+  --record-view-border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  --record-view-edit-border-bottom: 2px solid var(--primary-color);
+  --record-view-item-padding: 5px;
 
   /* button style */
   --button-background-color: var(--secondary-color);
@@ -223,9 +264,9 @@ body {
 
   /* material design component themes */
   --mdc-theme-on-primary: white;
-  --mdc-theme-primary: tomato;
+  --mdc-theme-primary: var(--primary-color);
   --mdc-theme-on-secondary: white;
-  --mdc-theme-secondary: tomato;
+  --mdc-theme-secondary: var(--primary-color);
 
   /* list page style*/
   --board-list-background-color: var(--main-section-background-color);
@@ -287,6 +328,10 @@ body {
 @media only screen and (max-width: 460px) {
   body {
     --grist-padding: 0;
+    --grist-input-zoom: 1.4;
+    --record-view-footer-iconbutton-size: 30px;
+    --record-view-footer-iconbutton-margin: -2px;
+    --record-view-footer-iconbutton-display: block;
 
     --context-toolbar-button: normal 9px var(--theme-font);
     --context-toolbar-button-height: 50px;
