@@ -25,6 +25,10 @@ export class FavoriteTool extends connect(store)(LitElement) {
         vertical-align: middle;
         line-height: 0;
       }
+
+      [favorable] {
+        opacity: 0.5;
+      }
     `
   }
 
@@ -33,7 +37,9 @@ export class FavoriteTool extends connect(store)(LitElement) {
 
     return renderable
       ? html`
-          <mwc-icon @click=${this.onclick.bind(this)}>${this.favored ? 'star' : 'star_border'}</mwc-icon>
+          <mwc-icon @click=${this.onclick.bind(this)} ?favorable=${!this.favored}
+            >${this.favored ? 'star' : 'star_border'}</mwc-icon
+          >
         `
       : html``
   }
