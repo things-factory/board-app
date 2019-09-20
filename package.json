@@ -46,6 +46,9 @@
     "@things-factory/offline-ui": "*",
     "@things-factory/print-service": "*",
     "@things-factory/print-ui": "*",
+    "@things-factory/publisher-base": "^0.0.12",
+    "@things-factory/publisher-service": "^0.0.1-beta.13",
+    "@things-factory/publisher-ui": "^1.0.0-beta.3",
     "@things-factory/screencast-ui": "*",
     "@things-factory/setting-ui": "*",
     "@things-factory/shell": "*",
@@ -85,9 +88,6 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@things-factory/board-test": "*",
-    "@things-factory/publisher-base": "^0.0.12-beta.2",
-    "@things-factory/publisher-service": "^0.0.1-beta.10",
-    "@things-factory/publisher-ui": "^1.0.0-beta.1"
+    "@things-factory/board-test": "*"
   }
 }
