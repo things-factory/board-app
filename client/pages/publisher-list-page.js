@@ -1,18 +1,16 @@
 import '@material/mwc-button'
 import '@material/mwc-fab'
 import '@material/mwc-icon'
-import { appendViewpart, toggleOverlay, openPopup, VIEWPART_POSITION } from '@things-factory/layout-base'
-import { PageView, ScrollbarStyles, store, pulltorefresh } from '@things-factory/shell'
+import { appendViewpart, toggleOverlay, VIEWPART_POSITION } from '@things-factory/layout-base'
+import {
+  deletePublishers,
+  fetchPublisherList,
+  updatePublisher
+} from '@things-factory/publisher-base/client/graphql/publisher'
+import '@things-factory/publisher-ui'
+import { InfiniteScrollable, PageView, pulltorefresh, ScrollbarStyles, store } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
-import InfiniteScrollable from '../mixins/infinite-scrollable'
-import '@things-factory/publisher-ui'
-import {
-  fetchPublisher,
-  fetchPublisherList,
-  updatePublisher,
-  deletePublishers
-} from '@things-factory/publisher-base/client/graphql/publisher'
 
 class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
   static get styles() {

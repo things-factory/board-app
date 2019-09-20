@@ -1,32 +1,31 @@
 import '@material/mwc-fab'
+import { openOverlay } from '@things-factory/layout-base'
+import {
+  client,
+  InfiniteScrollable,
+  navigate,
+  PageView,
+  pulltorefresh,
+  ScrollbarStyles,
+  store
+} from '@things-factory/shell'
 import gql from 'graphql-tag'
-
+import { css, html } from 'lit-element'
+import { connect } from 'pwa-helpers/connect-mixin.js'
+import SwipeListener from 'swipe-listener'
+import '../board-list/board-tile-list'
+import '../board-list/group-bar'
 import {
   createBoard,
   createGroup,
   deleteBoard,
   deleteGroup,
   fetchBoardList,
+  fetchFavoriteBoardList,
   fetchGroupList,
   updateBoard,
   updateGroup
 } from '../graphql'
-import { openOverlay } from '@things-factory/layout-base'
-import {
-  navigate,
-  PageView,
-  pulltorefresh,
-  ScrollbarStyles,
-  store,
-  client,
-  InfiniteScrollable
-} from '@things-factory/shell'
-import { css, html } from 'lit-element'
-import { connect } from 'pwa-helpers/connect-mixin.js'
-import SwipeListener from 'swipe-listener'
-import '../board-list/board-tile-list'
-import '../board-list/group-bar'
-import { fetchFavoriteBoardList } from '../graphql'
 import '../viewparts/board-info'
 import '../viewparts/group-info'
 

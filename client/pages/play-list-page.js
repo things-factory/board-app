@@ -1,25 +1,23 @@
 import '@material/mwc-fab'
+import { openOverlay } from '@things-factory/layout-base'
+import { client, navigate, PageView, pulltorefresh, ScrollbarStyles, store } from '@things-factory/shell'
 import gql from 'graphql-tag'
-import {
-  updateBoard,
-  fetchPlayGroup,
-  updatePlayGroup,
-  createPlayGroup,
-  deletePlayGroup,
-  fetchPlayGroupList,
-  leavePlayGroup
-} from '../graphql'
-import { navigate, PageView, ScrollbarStyles, store, pulltorefresh, client } from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
-import { openOverlay } from '@things-factory/layout-base'
-
+import SwipeListener from 'swipe-listener'
 import '../board-list/board-tile-list'
 import '../board-list/play-group-bar'
-
+import {
+  createPlayGroup,
+  deletePlayGroup,
+  fetchPlayGroup,
+  fetchPlayGroupList,
+  leavePlayGroup,
+  updateBoard,
+  updatePlayGroup
+} from '../graphql'
 import '../viewparts/board-info'
 import '../viewparts/play-group-info'
-import SwipeListener from 'swipe-listener'
 
 class PlayListPage extends connect(store)(PageView) {
   static get styles() {
