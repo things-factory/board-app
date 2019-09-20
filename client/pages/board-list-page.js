@@ -12,14 +12,21 @@ import {
   updateGroup
 } from '../graphql'
 import { openOverlay } from '@things-factory/layout-base'
-import { navigate, PageView, pulltorefresh, ScrollbarStyles, store, client } from '@things-factory/shell'
+import {
+  navigate,
+  PageView,
+  pulltorefresh,
+  ScrollbarStyles,
+  store,
+  client,
+  InfiniteScrollable
+} from '@things-factory/shell'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import SwipeListener from 'swipe-listener'
 import '../board-list/board-tile-list'
 import '../board-list/group-bar'
 import { fetchFavoriteBoardList } from '../graphql'
-import InfiniteScrollable from '../mixins/infinite-scrollable'
 import '../viewparts/board-info'
 import '../viewparts/group-info'
 
