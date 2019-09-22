@@ -153,10 +153,10 @@ class PublisherListPage extends connect(store)(InfiniteScrollable(PageView)) {
 
   stateChanged(state) {}
 
-  async activated(active) {
-    if (active) {
-      this.refreshPublishers()
-    }
+  async pageInitialized() {
+    await this.updateComplete
+
+    this.refreshPublishers()
   }
 
   firstUpdated() {

@@ -66,12 +66,6 @@ class FontListPage extends connect(store)(PageView) {
     this.groups && (await this.refreshBoards())
   }
 
-  async activated(active) {
-    if (active) {
-      !this.groups && this.refreshBoards()
-    }
-  }
-
   firstUpdated() {
     pulltorefresh({
       container: this.shadowRoot,

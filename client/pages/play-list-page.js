@@ -125,17 +125,17 @@ class PlayListPage extends connect(store)(PageView) {
     }
   }
 
+  updated(change) {
+    if (change.has('groupId')) {
+      this.refreshBoards()
+    }
+  }
+
   stateChanged(state) {
     if (this.active) {
       this.page = state.route.page
       this.groupId = state.route.resourceId
       this.favorites = state.favorite.favorites
-    }
-  }
-
-  async activated(active) {
-    if (active) {
-      !this.groups && this.refreshBoards()
     }
   }
 
