@@ -208,15 +208,18 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     }
   }
 
-  async pageInitialized() {
-    await this.updateComplete
+  async pageUpdated(changes, lifecycle) {
+    if (this.active) {
+      this.page = lifecycle.page
+      this.groupId = lifecycle.resourceId
 
-    this.refreshBoards()
+      await this.updateComplete
+
+      this.refreshBoards()
+    }
   }
 
   stateChanged(state) {
-    this.page = state.route.page
-    this.groupId = state.route.resourceId
     this.favorites = state.favorite.favorites
   }
 

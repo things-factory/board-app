@@ -115,26 +115,19 @@ class PlayListPage extends connect(store)(PageView) {
     this.updateContext()
   }
 
-  updated(change) {
-    /*
-     * play-list는 groupId 가 없는 경우에 대해 첫번째 그룹을 자동으로 가져오도록 처리하기 위해서,
-     * groupId가 없는 경우에 대한 처리가 필요했다.
-     */
-    if (change.has('groupId') || !this.groupId) {
-      this.refreshBoards()
-    }
-  }
+  async pageUpdated(changes, lifecycle) {
+    if (this.active) {
+      this.page = lifecycle.page
+      this.groupId = lifecycle.resourceId
 
-  updated(change) {
-    if (change.has('groupId')) {
+      await this.updateComplete
+
       this.refreshBoards()
     }
   }
 
   stateChanged(state) {
     if (this.active) {
-      this.page = state.route.page
-      this.groupId = state.route.resourceId
       this.favorites = state.favorite.favorites
     }
   }

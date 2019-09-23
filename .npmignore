@@ -1,6 +1,7 @@
 node_modules/
+dist-client/
+licenses/
 .git
 .vscode
 .editorconfig
 .prettierrc
-dist-client/
