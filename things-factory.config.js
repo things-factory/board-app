@@ -5,6 +5,16 @@ export default {
   route,
   routes: [
     {
+      /* overide board-viewer */
+      tagname: 'app-board-viewer-page',
+      page: 'board-viewer'
+    },
+    {
+      /* overide board-player */
+      tagname: 'app-board-player-page',
+      page: 'board-player'
+    },
+    {
       tagname: 'board-list-page',
       page: 'board-list'
     },
