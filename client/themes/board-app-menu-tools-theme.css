@@ -1,0 +1,6 @@
+body {
+  --menu-tools-background-color: var(--secondary-color);
+  --menu-tools-iconbutton-size: var(--icon-tiny-size);
+  --menu-tools-color: #87cfd0;
+  --menu-tools-active-color: #fff;
+}

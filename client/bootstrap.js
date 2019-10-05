@@ -1,6 +1,5 @@
 import { APPEND_APP_TOOL } from '@things-factory/apptool-base'
-import { APPEND_CONTEXT_TOOL, REMOVE_CONTEXT_TOOL } from '@things-factory/context-base'
-import { appendViewpart, removeViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
+import { appendViewpart, updateViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
 import { store, UPDATE_BASE_URL } from '@things-factory/shell'
 
 import { html } from 'lit-html'
@@ -13,6 +12,7 @@ export default function bootstrap() {
     type: UPDATE_BASE_URL
   })
 
+  /* append viewpart anchor to asidebar */
   appendViewpart({
     name: 'viewpart-info',
     viewpart: {
@@ -23,24 +23,19 @@ export default function bootstrap() {
     position: VIEWPART_POSITION.ASIDEBAR
   })
 
-  const tool = {
-    position: TOOL_POSITION.CENTER,
-    show: true,
-    template: html`
-      <menu-tools></menu-tools>
-    `,
-    context: 'board_topmenu'
-  }
-
-  const navbar = {
-    position: TOOL_POSITION.CENTER,
-    show: true,
-    template: html`
-      <menu-tools></menu-tools>
-    `
-  }
-
+  /* append top-menu to layout */
   var width
+
+  appendViewpart({
+    name: 'board-topmenu',
+    viewpart: {
+      show: true,
+      template: html`
+        <menu-tools></menu-tools>
+      `
+    },
+    position: VIEWPART_POSITION.NAVBAR
+  })
 
   store.subscribe(async () => {
     var state = store.getState()
@@ -51,27 +46,12 @@ export default function bootstrap() {
 
     width = state.layout.width
 
-    if (width == 'WIDE') {
-      store.dispatch({
-        type: REMOVE_CONTEXT_TOOL,
-        tool
-      })
-
-      appendViewpart({
-        name: 'board-topmenu',
-        viewpart: navbar,
-        position: VIEWPART_POSITION.NAVBAR
-      })
-    } else {
-      removeViewpart('board-topmenu')
-
-      store.dispatch({
-        type: APPEND_CONTEXT_TOOL,
-        tool
-      })
-    }
+    updateViewpart('board-topmenu', {
+      position: width == 'WIDE' ? VIEWPART_POSITION.NAVBAR : VIEWPART_POSITION.FOOTERBAR
+    })
   })
 
+  /* append favorite tool to app-tools */
   var acceptedPages = ['board-viewer']
 
   store.dispatch({

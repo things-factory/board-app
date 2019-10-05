@@ -9,7 +9,10 @@ export class MenuTools extends connect(store)(LitElement) {
   static get properties() {
     return {
       page: String,
-      width: String,
+      width: {
+        type: String,
+        reflect: true
+      },
       context: Object
     }
   }
@@ -19,8 +22,17 @@ export class MenuTools extends connect(store)(LitElement) {
       css`
         :host {
           display: flex;
-          flex-direction: row;
           background-color: var(--menu-tools-background-color);
+
+          /* for narrow mode */
+          flex-direction: column;
+          width: 100%;
+        }
+
+        :host([width='WIDE']) {
+          /* for wide mode */
+          flex-direction: row;
+          width: initial;
           height: 100%;
         }
 
@@ -35,11 +47,11 @@ export class MenuTools extends connect(store)(LitElement) {
           overflow: none;
         }
 
-        :host([wide]) ul {
+        :host([width='WIDE']) ul {
           flex-direction: column;
         }
 
-        :host([wide]) li {
+        :host([width='WIDE']) li {
           border-top: 1px solid rgba(255, 255, 255, 0.1);
           border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
@@ -98,7 +110,7 @@ export class MenuTools extends connect(store)(LitElement) {
               </a>
             </li>
             <li>
-              <a href="file-list" ?active=${this.page == 'file-list'}>
+              <a href="attachment-list" ?active=${this.page == 'attachment-list'}>
                 <mwc-icon>attachment</mwc-icon>
                 <div>attachment</div>
               </a>
@@ -106,13 +118,6 @@ export class MenuTools extends connect(store)(LitElement) {
           </ul>
         `
       : html``
-  }
-
-  updated(change) {
-    /* media query가 엘리먼트 생성 시에 동작하지 않는 문제를 처리함 */
-    if (change.has('width')) {
-      this.width == 'WIDE' ? this.setAttribute('wide', true) : this.removeAttribute('wide')
-    }
   }
 
   stateChanged(state) {
