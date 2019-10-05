@@ -23,7 +23,8 @@ export class AttachmentListPage extends InfiniteScrollable(PageView) {
 
   get context() {
     return {
-      title: 'attachment list'
+      title: 'attachment list',
+      board_topmenu: true
     }
   }
 
