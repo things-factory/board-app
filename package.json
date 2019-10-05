@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@things-factory/apptool-ui": "*",
+    "@things-factory/attachment-ui": "*",
     "@things-factory/auth-provider-jwt": "*",
     "@things-factory/auth-ui-jwt": "*",
     "@things-factory/board-service": "*",
@@ -85,6 +86,7 @@
     "@things-scene/traffic": "*",
     "@things-scene/visualizer": "things-scene/visualizer#for-things-factory",
     "@things-scene/wheel-sorter": "*",
+    "clipboard": "^2.0.4",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

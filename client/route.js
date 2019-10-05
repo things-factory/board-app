@@ -25,5 +25,9 @@ export default function route(page) {
     case 'publisher-list':
       import('./pages/publisher-list-page')
       return page
+
+    case 'attachment-list':
+      import('./pages/attachment-list-page')
+      return page
   }
 }

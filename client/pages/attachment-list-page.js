@@ -1,0 +1,37 @@
+import { html, css } from 'lit-element'
+import { PageView, InfiniteScrollable } from '@things-factory/shell'
+import '@things-factory/attachment-ui'
+
+export class AttachmentListPage extends InfiniteScrollable(PageView) {
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: flex;
+        }
+
+        attachment-selector {
+          flex: 1;
+        }
+      `
+    ]
+  }
+
+  static get properties() {
+    return {}
+  }
+
+  get context() {
+    return {
+      title: 'attachment list'
+    }
+  }
+
+  render() {
+    return html`
+      <attachment-selector .creatable=${true}></attachment-selector>
+    `
+  }
+}
+
+customElements.define('attachment-list-page', AttachmentListPage)

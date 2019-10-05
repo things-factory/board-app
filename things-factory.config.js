@@ -25,6 +25,10 @@ export default {
     {
       tagname: 'publisher-list-page',
       page: 'publisher-list'
+    },
+    {
+      tagname: 'attachment-list-page',
+      page: 'attachment-list'
     }
   ],
   bootstrap
