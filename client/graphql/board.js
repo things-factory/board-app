@@ -62,8 +62,9 @@ export async function createBoard(board) {
       name        : String!
       description : String
       model       : String!
+      groupId     : String!
     }
-    */
+  */
 
   board.model = JSON.stringify(board.model)
 

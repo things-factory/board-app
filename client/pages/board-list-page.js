@@ -98,22 +98,15 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
         id="list"
         .boards=${this.boards}
         .favorites=${this.favorites}
+        .groups=${this.groups}
+        .group=${this.groupId}
+        .creatable=${true}
         @info-board=${e => this.onInfoBoard(e.detail)}
         @scroll=${e => {
           this.onScroll(e)
         }}
+        @create-board=${e => this.onCreateBoard(e.detail)}
       ></board-tile-list>
-
-      <a
-        id="create"
-        href="#"
-        @click=${e => {
-          this.onInfoBoard()
-          e.preventDefault()
-        }}
-      >
-        <mwc-fab icon="add" title="create"> </mwc-fab>
-      </a>
     `
   }
 
@@ -259,7 +252,6 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
           .groupId=${this.groupId}
           @update-board=${e => this.onUpdateBoard(e.detail)}
           @delete-board=${e => this.onDeleteBoard(e.detail)}
-          @create-board=${e => this.onCreateBoard(e.detail)}
           @join-playgroup=${e => this.onJoinPlayGroup(e.detail)}
           @leave-playgroup=${e => this.onLeavePlayGroup(e.detail)}
         ></board-info>
@@ -315,6 +307,13 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
 
   async onCreateBoard(board) {
     try {
+      if (!board.model) {
+        board.model = {
+          width: 800,
+          height: 600
+        }
+      }
+
       await createBoard(board)
 
       this._notify('info', 'new board created')

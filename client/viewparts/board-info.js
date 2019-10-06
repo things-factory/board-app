@@ -242,28 +242,17 @@ export class BoardInfo extends LitElement {
           <span>${new Date(Number(board.updatedAt)).toLocaleString()}</span>
 
           <div buttons>
-            ${this.boardId
-              ? html`
-                  <input
-                    type="button"
-                    name="save"
-                    value=${i18next.t('button.save')}
-                    @click=${this.updateBoard.bind(this)}
-                  /><input
-                    type="button"
-                    name="delete"
-                    value=${i18next.t('button.delete')}
-                    @click=${this.deleteBoard.bind(this)}
-                  />
-                `
-              : html`
-                  <input
-                    type="button"
-                    name="create"
-                    value=${i18next.t('button.create')}
-                    @click=${this.createBoard.bind(this)}
-                  />
-                `}
+            <input
+              type="button"
+              name="save"
+              value=${i18next.t('button.save')}
+              @click=${this.updateBoard.bind(this)}
+            /><input
+              type="button"
+              name="delete"
+              value=${i18next.t('button.delete')}
+              @click=${this.deleteBoard.bind(this)}
+            />
           </div>
         </fieldset>
 
@@ -293,52 +282,39 @@ export class BoardInfo extends LitElement {
   }
 
   async refresh() {
-    if (!this.boardId) {
-      /* model이 없으므로, 기본 모델을 제공함. */
-      var board = {
-        name: '',
-        description: '',
-        groupId: this.groupId,
-        model: {
-          width: 800,
-          height: 600
-        }
-      }
-    } else {
-      var response = (await client.query({
-        query: gql`
-          query FetchBoardById($id: String!) {
-            board(id: $id) {
+    var response = (await client.query({
+      query: gql`
+        query FetchBoardById($id: String!) {
+          board(id: $id) {
+            id
+            name
+            description
+            group {
               id
               name
-              description
-              group {
-                id
-                name
-              }
-              playGroups {
-                id
-                name
-              }
-              thumbnail
-              createdAt
-              creator {
-                id
-                name
-              }
-              updatedAt
-              updater {
-                id
-                name
-              }
+            }
+            playGroups {
+              id
+              name
+            }
+            thumbnail
+            createdAt
+            creator {
+              id
+              name
+            }
+            updatedAt
+            updater {
+              id
+              name
             }
           }
-        `,
-        variables: { id: this.boardId }
-      })).data
+        }
+      `,
+      variables: { id: this.boardId }
+    })).data
 
-      var board = response.board
-    }
+    var board = response.board
 
     this.boardGroupList = (await client.query({
       query: gql`
@@ -373,16 +349,6 @@ export class BoardInfo extends LitElement {
     })).data.playGroups.items
 
     this.board = board
-  }
-
-  async createBoard() {
-    this.dispatchEvent(
-      new CustomEvent('create-board', {
-        detail: this.board
-      })
-    )
-
-    this.close()
   }
 
   async updateBoard() {
