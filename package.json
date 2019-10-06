@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -85,9 +85,7 @@
     "@things-scene/table": "*",
     "@things-scene/traffic": "*",
     "@things-scene/visualizer": "things-scene/visualizer#for-things-factory",
-    "@things-scene/wheel-sorter": "*",
-    "clipboard": "^2.0.4",
-    "lodash": "^4.17.15"
+    "@things-scene/wheel-sorter": "*"
   },
   "devDependencies": {
     "@things-factory/board-test": "*"
