@@ -189,8 +189,7 @@ export class BoardInfo extends LitElement {
         checked: false
       }
     })
-
-    board.playGroups.map(group => {
+    ;(board.playGroups || []).map(group => {
       var playGroup = playGroupList.find(g => g.id == group.id)
       if (playGroup) {
         playGroup.checked = true
