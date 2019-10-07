@@ -29,6 +29,10 @@ export default {
     {
       tagname: 'attachment-list-page',
       page: 'attachment-list'
+    },
+    {
+      tagname: 'font-list-page',
+      page: 'font-list'
     }
   ],
   bootstrap

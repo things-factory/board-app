@@ -104,15 +104,15 @@ export class MenuTools extends connect(store)(LitElement) {
               </a>
             </li>
             <li>
-              <a href="publisher-list" ?active=${this.page == 'publisher-list'}>
-                <mwc-icon>cloud_download</mwc-icon>
-                <div>publisher</div>
-              </a>
-            </li>
-            <li>
               <a href="attachment-list" ?active=${this.page == 'attachment-list'}>
                 <mwc-icon>attachment</mwc-icon>
                 <div>attachment</div>
+              </a>
+            </li>
+            <li>
+              <a href="publisher-list" ?active=${this.page == 'publisher-list'}>
+                <mwc-icon>cloud_download</mwc-icon>
+                <div>publisher</div>
               </a>
             </li>
           </ul>

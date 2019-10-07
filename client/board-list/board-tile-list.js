@@ -31,6 +31,7 @@ export default class BoardTileList extends LitElement {
 
         [card][create] {
           overflow: visible;
+          background-color: initial;
         }
 
         [card]:hover {

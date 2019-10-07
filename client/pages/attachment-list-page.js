@@ -1,8 +1,8 @@
 import { html, css } from 'lit-element'
-import { PageView, InfiniteScrollable } from '@things-factory/shell'
+import { PageView } from '@things-factory/shell'
 import '@things-factory/attachment-ui'
 
-export class AttachmentListPage extends InfiniteScrollable(PageView) {
+export class AttachmentListPage extends PageView {
   static get styles() {
     return [
       css`
@@ -26,6 +26,12 @@ export class AttachmentListPage extends InfiniteScrollable(PageView) {
       title: 'attachment list',
       board_topmenu: true
     }
+  }
+
+  async pageInitialized() {
+    await this.updateComplete
+
+    this.shadowRoot.querySelector('attachment-selector').refreshAttachments()
   }
 
   render() {

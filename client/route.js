@@ -29,5 +29,9 @@ export default function route(page) {
     case 'attachment-list':
       import('./pages/attachment-list-page')
       return page
+
+    case 'font-list':
+      import('./pages/font-list-page')
+      return page
   }
 }
