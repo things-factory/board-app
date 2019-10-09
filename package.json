@@ -50,6 +50,7 @@
     "@things-factory/publisher-base": "^0.0.12",
     "@things-factory/publisher-service": "^0.0.1-beta.13",
     "@things-factory/publisher-ui": "^1.0.0-beta.3",
+    "@things-factory/resource-ui": "*",
     "@things-factory/screencast-ui": "*",
     "@things-factory/setting-ui": "*",
     "@things-factory/shell": "*",
