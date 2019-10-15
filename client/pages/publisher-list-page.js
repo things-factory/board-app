@@ -140,7 +140,7 @@ class PublisherListPage extends PageView {
           icon: record => (!record ? 'play_arrow' : record.status == 1 ? 'pause' : 'play_arrow'),
           handlers: {
             click: (columns, data, column, record, rowIndex) => {
-              if ((record.status = 0)) {
+              if (record.status == 0) {
                 this.startPublisher(record)
               } else {
                 this.stopPublisher(record)
