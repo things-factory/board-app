@@ -38,7 +38,10 @@ class PublisherListPage extends PageView {
   }
 
   static get properties() {
-    return {}
+    return {
+      _searchFields: Object,
+      _gristConfig: Object
+    }
   }
 
   get context() {
