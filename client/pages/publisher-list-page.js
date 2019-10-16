@@ -3,7 +3,8 @@ import '@material/mwc-icon'
 
 import { PageView, ScrollbarStyles, isMobileDevice } from '@things-factory/shell'
 import { i18next } from '@things-factory/i18n-base'
-import '@things-factory/grist-ui'
+import { registerEditor } from '@things-factory/grist-ui'
+import { CrontabEditor } from '@things-factory/publisher-ui/client/crontab-editor'
 import '@things-factory/form-ui'
 import {
   createPublisher,
@@ -74,6 +75,12 @@ class PublisherListPage extends PageView {
         .fetchHandler=${this.fetchHandler.bind(this)}
       ></data-grist>
     `
+  }
+
+  connectedCallback() {
+    super.connectedCallback()
+
+    registerEditor('crontab', CrontabEditor)
   }
 
   async fetchHandler({ page, limit, sorters = [] }) {
@@ -165,7 +172,7 @@ class PublisherListPage extends PageView {
           width: 150
         },
         {
-          type: 'string',
+          type: 'crontab',
           name: 'intervalExpr',
           header: i18next.t('field.crontab'),
           record: { editable: true, align: 'left' },
