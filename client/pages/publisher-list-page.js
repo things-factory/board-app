@@ -47,7 +47,7 @@ class PublisherListPage extends PageView {
   get context() {
     return {
       title: 'Publisher List',
-      board_topmenu: true,
+      board_topmenu: false,
       actions: [
         {
           title: i18next.t('button.save'),
