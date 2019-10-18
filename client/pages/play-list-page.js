@@ -1,10 +1,9 @@
 import '@material/mwc-fab'
 import { openOverlay } from '@things-factory/layout-base'
-import { client, navigate, PageView, pulltorefresh, ScrollbarStyles, store } from '@things-factory/shell'
+import { client, navigate, PageView, pulltorefresh, ScrollbarStyles, store, swipe } from '@things-factory/shell'
 import gql from 'graphql-tag'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
-import SwipeListener from 'swipe-listener'
 import '../board-list/board-tile-list'
 import '../board-list/play-group-bar'
 import {
@@ -42,6 +41,18 @@ class PlayListPage extends connect(store)(PageView) {
           bottom: 15px;
           right: 16px;
         }
+
+        oops-spinner {
+          display: none;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        oops-spinner[show] {
+          display: block;
+        }
       `
     ]
   }
@@ -51,7 +62,8 @@ class PlayListPage extends connect(store)(PageView) {
       groupId: String,
       groups: Array,
       boards: Array,
-      favorites: Array
+      favorites: Array,
+      _showSpinner: Boolean
     }
   }
 
@@ -83,6 +95,8 @@ class PlayListPage extends connect(store)(PageView) {
       <a id="play" .href=${'board-player/' + this.groupId}>
         <mwc-fab icon="play_arrow" title="play"> </mwc-fab>
       </a>
+
+      <oops-spinner ?show=${this._showSpinner}></oops-spinner>
     `
   }
 
@@ -110,9 +124,18 @@ class PlayListPage extends connect(store)(PageView) {
       return
     }
 
+    this._showSpinner = true
+
     this.boards = this.groupId ? (await fetchPlayGroup(this.groupId)).playGroup.boards : []
 
     this.updateContext()
+
+    var list = this.shadowRoot.querySelector('board-tile-list')
+
+    list.style.transition = ''
+    list.style.transform = `translate3d(0, 0, 0)`
+
+    this._showSpinner = false
   }
 
   async pageUpdated(changes, lifecycle) {
@@ -143,23 +166,63 @@ class PlayListPage extends connect(store)(PageView) {
       }
     })
 
-    SwipeListener(scrollTargetEl)
+    swipe({
+      container: this.shadowRoot,
+      animates: {
+        dragging: async (d, opts) => {
+          var groups = this.groups
+          var currentIndex = groups.findIndex(group => group.id == this.groupId)
 
-    scrollTargetEl.addEventListener('swipe', e => {
-      var directions = e.detail.directions
-      var groups = this.groups
-      var currentIndex = groups.findIndex(group => group.id == this.groupId)
+          if ((d > 0 && currentIndex <= 0) || (d < 0 && currentIndex >= groups.length - 1)) {
+            /* TODO blocked gesture */
+            return false
+          }
 
-      if (directions.left) {
-        var lastIndex = groups.length - 1
+          var list = this.shadowRoot.querySelector('board-tile-list')
+          list.style.transform = `translate3d(${d}px, 0, 0)`
+        },
+        aborting: async opts => {
+          var list = this.shadowRoot.querySelector('board-tile-list')
+          list.style.transition = 'transform 0.3s'
+          list.style.transform = `translate3d(0, 0, 0)`
+          list.addEventListener('transitionend', () => {
+            list.style.transition = ''
+          })
+        },
+        swiping: async (d, opts) => {
+          var groups = this.groups
+          var currentIndex = groups.findIndex(group => group.id == this.groupId)
 
-        if (currentIndex < lastIndex) {
-          navigate(`${this.page}/${groups[currentIndex + 1].id}`)
+          var list = this.shadowRoot.querySelector('board-tile-list')
+          if ((d > 0 && currentIndex <= 0) || (d < 0 && currentIndex >= groups.length - 1)) {
+            list.style.transition = ''
+            list.style.transform = `translate3d(0, 0, 0)`
+          } else {
+            list.style.transition = 'transform 0.3s'
+            list.style.transform = `translate3d(${d < 0 ? '-100%' : '100%'}, 0, 0)`
+
+            navigate(`${this.page}/${groups[currentIndex + (d < 0 ? 1 : -1)].id}`)
+          }
         }
-      } else if (directions.right && currentIndex != 0) {
-        navigate(`${this.page}/${groups[currentIndex - 1].id}`)
       }
     })
+    // SwipeListener(scrollTargetEl)
+
+    // scrollTargetEl.addEventListener('swipe', e => {
+    //   var directions = e.detail.directions
+    //   var groups = this.groups
+    //   var currentIndex = groups.findIndex(group => group.id == this.groupId)
+
+    //   if (directions.left) {
+    //     var lastIndex = groups.length - 1
+
+    //     if (currentIndex < lastIndex) {
+    //       navigate(`${this.page}/${groups[currentIndex + 1].id}`)
+    //     }
+    //   } else if (directions.right && currentIndex != 0) {
+    //     navigate(`${this.page}/${groups[currentIndex - 1].id}`)
+    //   }
+    // })
   }
 
   async onInfoBoard(boardId) {

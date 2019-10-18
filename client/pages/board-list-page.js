@@ -7,12 +7,12 @@ import {
   PageView,
   pulltorefresh,
   ScrollbarStyles,
-  store
+  store,
+  swipe
 } from '@things-factory/shell'
 import gql from 'graphql-tag'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
-import SwipeListener from 'swipe-listener'
 import '../board-list/board-tile-list'
 import '../board-list/group-bar'
 import {
@@ -26,6 +26,7 @@ import {
   updateBoard,
   updateGroup
 } from '../graphql'
+
 import '../viewparts/board-info'
 import '../viewparts/group-info'
 
@@ -52,6 +53,18 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
           bottom: 15px;
           right: 16px;
         }
+
+        oops-spinner {
+          display: none;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        oops-spinner[show] {
+          display: block;
+        }
       `
     ]
   }
@@ -63,7 +76,8 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
       boards: Array,
       favorites: Array,
       _page: Number,
-      _total: Number
+      _total: Number,
+      _showSpinner: Boolean
     }
   }
 
@@ -107,6 +121,8 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
         }}
         @create-board=${e => this.onCreateBoard(e.detail)}
       ></board-tile-list>
+
+      <oops-spinner ?show=${this._showSpinner}></oops-spinner>
     `
   }
 
@@ -171,12 +187,21 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
       return
     }
 
+    this._showSpinner = true
+
     var { items: boards, total } = await this.getBoards()
     this.boards = boards
     this._page = 1
     this._total = total
 
     this.updateContext()
+
+    var list = this.shadowRoot.querySelector('board-tile-list')
+
+    list.style.transition = ''
+    list.style.transform = `translate3d(0, 0, 0)`
+
+    this._showSpinner = false
   }
 
   async appendBoards() {
@@ -225,21 +250,44 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
       }
     })
 
-    SwipeListener(this.scrollTargetEl)
+    swipe({
+      container: this.shadowRoot,
+      animates: {
+        dragging: async (d, opts) => {
+          var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]
+          var currentIndex = groups.findIndex(group => group.id == this.groupId)
 
-    this.scrollTargetEl.addEventListener('swipe', e => {
-      var directions = e.detail.directions
-      var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]
-      var currentIndex = groups.findIndex(group => group.id == this.groupId)
+          if ((d > 0 && currentIndex <= 0) || (d < 0 && currentIndex >= groups.length - 1)) {
+            /* TODO blocked gesture */
+            return false
+          }
 
-      if (directions.left) {
-        var lastIndex = groups.length - 1
+          var list = this.shadowRoot.querySelector('board-tile-list')
+          list.style.transform = `translate3d(${d}px, 0, 0)`
+        },
+        aborting: async opts => {
+          var list = this.shadowRoot.querySelector('board-tile-list')
+          list.style.transition = 'transform 0.3s'
+          list.style.transform = `translate3d(0, 0, 0)`
+          list.addEventListener('transitionend', () => {
+            list.style.transition = ''
+          })
+        },
+        swiping: async (d, opts) => {
+          var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]
+          var currentIndex = groups.findIndex(group => group.id == this.groupId)
 
-        if (currentIndex < lastIndex) {
-          navigate(`${this.page}/${groups[currentIndex + 1].id}`)
+          var list = this.shadowRoot.querySelector('board-tile-list')
+          if ((d > 0 && currentIndex <= 0) || (d < 0 && currentIndex >= groups.length - 1)) {
+            list.style.transition = ''
+            list.style.transform = `translate3d(0, 0, 0)`
+          } else {
+            list.style.transition = 'transform 0.3s'
+            list.style.transform = `translate3d(${d < 0 ? '-100%' : '100%'}, 0, 0)`
+
+            navigate(`${this.page}/${groups[currentIndex + (d < 0 ? 1 : -1)].id}`)
+          }
         }
-      } else if (directions.right && currentIndex != 0) {
-        navigate(`${this.page}/${groups[currentIndex - 1].id}`)
       }
     })
   }
