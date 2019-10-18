@@ -177,10 +177,6 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     return (await fetchFavoriteBoardList(listParam)).favoriteBoards
   }
 
-  get scrollTargetEl() {
-    return this.shadowRoot.querySelector('board-tile-list')
-  }
-
   async refreshBoards() {
     if (!this.groups) {
       await this.refresh()
@@ -242,9 +238,11 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
   }
 
   firstUpdated() {
+    var list = this.shadowRoot.querySelector('board-tile-list')
+
     pulltorefresh({
       container: this.shadowRoot,
-      scrollable: this.scrollTargetEl,
+      scrollable: list,
       refresh: () => {
         return this.refresh()
       }
@@ -262,14 +260,13 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
             return false
           }
 
-          var list = this.shadowRoot.querySelector('board-tile-list')
           list.style.transform = `translate3d(${d}px, 0, 0)`
         },
         aborting: async opts => {
-          var list = this.shadowRoot.querySelector('board-tile-list')
           list.style.transition = 'transform 0.3s'
           list.style.transform = `translate3d(0, 0, 0)`
-          list.addEventListener('transitionend', () => {
+
+          setTimeout(() => {
             list.style.transition = ''
           })
         },
@@ -277,7 +274,6 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
           var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]
           var currentIndex = groups.findIndex(group => group.id == this.groupId)
 
-          var list = this.shadowRoot.querySelector('board-tile-list')
           if ((d > 0 && currentIndex <= 0) || (d < 0 && currentIndex >= groups.length - 1)) {
             list.style.transition = ''
             list.style.transform = `translate3d(0, 0, 0)`

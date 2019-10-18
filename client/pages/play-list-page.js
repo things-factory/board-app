@@ -156,11 +156,11 @@ class PlayListPage extends connect(store)(PageView) {
   }
 
   firstUpdated() {
-    var scrollTargetEl = this.shadowRoot.querySelector('board-tile-list')
+    var list = this.shadowRoot.querySelector('board-tile-list')
 
     pulltorefresh({
       container: this.shadowRoot,
-      scrollable: scrollTargetEl,
+      scrollable: list,
       refresh: () => {
         return this.refresh()
       }
@@ -178,22 +178,20 @@ class PlayListPage extends connect(store)(PageView) {
             return false
           }
 
-          var list = this.shadowRoot.querySelector('board-tile-list')
           list.style.transform = `translate3d(${d}px, 0, 0)`
         },
         aborting: async opts => {
-          var list = this.shadowRoot.querySelector('board-tile-list')
           list.style.transition = 'transform 0.3s'
           list.style.transform = `translate3d(0, 0, 0)`
-          list.addEventListener('transitionend', () => {
+
+          setTimeout(() => {
             list.style.transition = ''
-          })
+          }, 300)
         },
         swiping: async (d, opts) => {
           var groups = this.groups
           var currentIndex = groups.findIndex(group => group.id == this.groupId)
 
-          var list = this.shadowRoot.querySelector('board-tile-list')
           if ((d > 0 && currentIndex <= 0) || (d < 0 && currentIndex >= groups.length - 1)) {
             list.style.transition = ''
             list.style.transform = `translate3d(0, 0, 0)`
@@ -206,23 +204,6 @@ class PlayListPage extends connect(store)(PageView) {
         }
       }
     })
-    // SwipeListener(scrollTargetEl)
-
-    // scrollTargetEl.addEventListener('swipe', e => {
-    //   var directions = e.detail.directions
-    //   var groups = this.groups
-    //   var currentIndex = groups.findIndex(group => group.id == this.groupId)
-
-    //   if (directions.left) {
-    //     var lastIndex = groups.length - 1
-
-    //     if (currentIndex < lastIndex) {
-    //       navigate(`${this.page}/${groups[currentIndex + 1].id}`)
-    //     }
-    //   } else if (directions.right && currentIndex != 0) {
-    //     navigate(`${this.page}/${groups[currentIndex - 1].id}`)
-    //   }
-    // })
   }
 
   async onInfoBoard(boardId) {
