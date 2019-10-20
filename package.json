@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -81,7 +81,7 @@
     "@things-scene/restful": "*",
     "@things-scene/slam": "*",
     "@things-scene/stomp": "*",
-    "@things-scene/switch": "^1.0.0-beta.3",
+    "@things-scene/switch": "*",
     "@things-scene/tab": "*",
     "@things-scene/table": "*",
     "@things-scene/traffic": "*",
