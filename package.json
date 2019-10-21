@@ -56,7 +56,7 @@
     "@things-factory/shell": "*",
     "@things-factory/system-ui": "*",
     "@things-scene/baidu-map": "*",
-    "@things-scene/chartjs": "things-scene/chartjs#for-things-factory",
+    "@things-scene/chartjs": "*",
     "@things-scene/clock": "*",
     "@things-scene/clone": "*",
     "@things-scene/compass": "*",
