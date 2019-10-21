@@ -78,7 +78,7 @@ export default class GroupBar extends LitElement {
     return html`
       <ul>
         <li ?active=${this.groupId !== 0 && !this.groupId}>
-          <a href="${this.targetPage}"><mwc-icon>home</mwc-icon></a>
+          <a href="${this.targetPage}"><mwc-icon>dashboard</mwc-icon></a>
         </li>
 
         <li ?active=${this.groupId === 'favor'}>
