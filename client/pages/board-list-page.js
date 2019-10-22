@@ -126,6 +126,10 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     `
   }
 
+  get scrollTargetEl() {
+    return this.shadowRoot.querySelector('board-tile-list')
+  }
+
   async refresh() {
     this.groups = (await fetchGroupList()).groups.items
 
