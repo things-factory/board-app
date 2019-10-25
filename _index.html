@@ -58,9 +58,45 @@
       // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('service-worker.js', {
-            scope: '/'
-          })
+          navigator.serviceWorker
+            .register('service-worker.js', {
+              scope: '/'
+            })
+            .then(registration => {
+              console.log('SW registered: ', registration)
+              return registration.pushManager.getSubscription()
+            })
+            .then(subscription => {
+              if (subscription) {
+                console.log('Already subscribed', subscription.endpoint)
+              }
+            })
+        })
+
+        navigator.serviceWorker.addEventListener('message', function(e) {
+          if (!e.data) return
+
+          switch (e.data) {
+            case 'show-reload-snackbar':
+              document.dispatchEvent(
+                new CustomEvent('notify', {
+                  composed: true,
+                  bubbles: true,
+                  detail: {
+                    level: 'info',
+                    message: 'The application has been updated.', // 응용 프로그램이 업데이트되었습니다.
+                    option: {
+                      action: {
+                        label: 'reload',
+                        callback: () => window.location.reload()
+                      },
+                      timer: -1
+                    }
+                  }
+                })
+              )
+              break
+          }
         })
       }
 
