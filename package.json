@@ -68,6 +68,7 @@
     "@things-scene/form": "*",
     "@things-scene/gauge": "*",
     "@things-scene/google-map": "*",
+    "@things-scene/grist": "*",
     "@things-scene/half-roundrect": "*",
     "@things-scene/indoor-map": "*",
     "@things-scene/label": "*",
