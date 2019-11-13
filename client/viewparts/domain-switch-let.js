@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin'
-import { store } from '@things-factory/shell'
+import { store, navigate } from '@things-factory/shell'
 import '@things-factory/i18n-base'
 import '@things-factory/setting-base'
 
