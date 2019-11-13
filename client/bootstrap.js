@@ -1,10 +1,12 @@
 import { APPEND_APP_TOOL } from '@things-factory/apptool-base'
 import { appendViewpart, updateViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
 import { store, UPDATE_BASE_URL } from '@things-factory/shell'
+import { ADD_SETTING } from '@things-factory/setting-base'
 
 import { html } from 'lit-html'
 
 import './viewparts/menu-tools'
+import './viewparts/domain-switch-let'
 import './apptools/favorite-tool'
 
 export default function bootstrap() {
@@ -61,6 +63,17 @@ export default function bootstrap() {
         <favorite-tool .acceptedPages=${acceptedPages}></favorite-tool>
       `,
       position: TOOL_POSITION.REAR
+    }
+  })
+
+  /* add domain-switch-let into settings */
+  store.dispatch({
+    type: ADD_SETTING,
+    setting: {
+      seq: 30,
+      template: html`
+        <domain-switch-let></domain-switch-let>
+      `
     }
   })
 }
