@@ -34,7 +34,7 @@ export class DomainSwitchLet extends connect(store)(LitElement) {
 
   stateChanged(state) {
     var user = state.auth.user
-    this.domains = state.auth.domains
+    this.domains = state.app.domains
     this.domain = user ? user.domain : null
   }
 }
