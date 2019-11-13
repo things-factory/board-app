@@ -19,10 +19,12 @@ export class DomainSwitchLet extends connect(store)(LitElement) {
       <setting-let>
         <i18n-msg slot="title" msgid="title.switch domain"></i18n-msg>
 
-        <select slot="content" .value=${domain.name} @change=${e => navigate('/domain/' + e.target.value)}>
+        <select slot="content" @change=${e => navigate('/domain/' + e.target.value)}>
           ${this.domains.map(
-            domain => html`
-              <option .value=${domain.subdomain}>${domain.name}</option>
+            option => html`
+              <option value=${option.subdomain} ?selected=${domain.subdomain == option.subdomain}
+                >${option.name}</option
+              >
             `
           )}
         </select>
