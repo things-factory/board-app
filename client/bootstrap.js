@@ -2,11 +2,11 @@ import { APPEND_APP_TOOL } from '@things-factory/apptool-base'
 import { appendViewpart, updateViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
 import { store, UPDATE_BASE_URL } from '@things-factory/shell'
 import { ADD_SETTING } from '@things-factory/setting-base'
+import '@things-factory/setting-ui/client/setting-lets/domain-switch-let'
 
 import { html } from 'lit-html'
 
 import './viewparts/menu-tools'
-import './viewparts/domain-switch-let'
 import './apptools/favorite-tool'
 
 export default function bootstrap() {
