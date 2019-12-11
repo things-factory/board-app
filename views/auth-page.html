@@ -53,53 +53,9 @@
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet" />
+    <link rel="stylesheet" href="/theme.css" />
 
     <script>
-      // Load and register pre-caching Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker
-            .register('/service-worker.js', {
-              scope: '/'
-            })
-            .then(registration => {
-              console.log('SW registered: ', registration)
-              return registration.pushManager.getSubscription()
-            })
-            .then(subscription => {
-              if (subscription) {
-                console.log('Already subscribed', subscription.endpoint)
-              }
-            })
-        })
-
-        navigator.serviceWorker.addEventListener('message', function(e) {
-          if (!e.data) return
-
-          switch (e.data) {
-            case 'show-reload-snackbar':
-              document.dispatchEvent(
-                new CustomEvent('notify', {
-                  composed: true,
-                  bubbles: true,
-                  detail: {
-                    level: 'info',
-                    message: 'The application has been updated.', // 응용 프로그램이 업데이트되었습니다.
-                    option: {
-                      action: {
-                        label: 'reload',
-                        callback: () => window.location.reload()
-                      },
-                      timer: -1
-                    }
-                  }
-                })
-              )
-              break
-          }
-        })
-      }
-
       // Redux assumes `process.env.NODE_ENV` exists in the ES module build.
       // https://github.com/reactjs/redux/issues/2907
       window.process = { env: { NODE_ENV: 'production' } }
@@ -118,18 +74,28 @@
         -webkit-font-smoothing: antialiased;
       }
     </style>
+
+    <!--- prefetch -->
+    <link rel="prefetch" href="/signin.js">
+    <link rel="prefetch" href="/signup.js">
+    <link rel="prefetch" href="/forgot-password.js">
+    <link rel="prefetch" href="/domain-select.js">
   </head>
   <body>
-    <things-app></things-app>
+    <<%- pageElement %> id="page"></<%- pageElement %>>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="node_modules/web-animations-js/web-animations-next.min.js"></script>
-    <script src="node_modules/@hatiolab/things-scene/things-scene-min.js"></script>
     <!-- Built with love using PWA Starter Kit -->
 
-    <script src="licenses/things-lic.js"></script>
+    <script src="<%- elementScript %>"></script>
+    <script src="/theme.js"></script>
+    <script>
+      var pageEl = document.querySelector('#page')
+      page.data = <%- JSON.stringify(data) %>
+    </script>
   </body>
 </html>
