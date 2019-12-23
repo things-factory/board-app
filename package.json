@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -66,6 +66,7 @@
     "@things-scene/form": "*",
     "@things-scene/gauge": "*",
     "@things-scene/google-map": "*",
+    "@things-scene/graphql": "*",
     "@things-scene/grist": "*",
     "@things-scene/half-roundrect": "*",
     "@things-scene/indoor-map": "*",
