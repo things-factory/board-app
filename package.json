@@ -1,14 +1,14 @@
 {
   "name": "@things-factory/board-app",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
   "license": "MIT",
   "author": "heartyoh",
   "scripts": {
-    "serve": "things-factory",
-    "serve:dev": "npm run build:server && things-factory-dev",
+    "serve": "things-factory board-app",
+    "serve:dev": "npm run build:server && things-factory-dev board-app",
     "start:app": "things-factory-app",
     "start:app:android": "things-factory-app --platform=android",
     "emulate:app": "things-factory-app --emulate",
