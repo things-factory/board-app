@@ -25,7 +25,9 @@
     "migration:create": "node ./node_modules/typeorm/cli.js migration:create",
     "migration:generate": "node ./node_modules/typeorm/cli.js migration:generate",
     "migration:run": "node ./node_modules/typeorm/cli.js migration:run",
-    "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert"
+    "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert",
+    "stop:dev": "kill $(lsof -t -i:3000,3001)",
+    "stop": "things-factory-stop board-app"
   },
   "dependencies": {
     "@things-factory/apptool-ui": "^1.0.0-alpha.1",
