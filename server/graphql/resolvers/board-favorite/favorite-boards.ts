@@ -9,8 +9,14 @@ export const favoritesBoardsResolver = {
     buildQuery(queryBuilder, params, context)
 
     var qb = queryBuilder
-      .innerJoin(Favorite, 'favorite', 'board.id = favorite.routing')
-      .select(['board.id', 'board.name', 'board.description', 'board.thumbnail', 'favorite.id as favoriteId'])
+      .innerJoin(Favorite, 'Favorite', 'Board.id = Favorite.routing')
+      .select([
+        'Board.id as id',
+        'Board.name as name',
+        'Board.description as description',
+        'Board.thumbnail as thumbnail',
+        'Favorite.id as favoriteId'
+      ])
 
     const items = await qb.getRawMany()
     const total = await qb.getCount()
