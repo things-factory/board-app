@@ -33,14 +33,6 @@ export default {
     {
       tagname: 'font-list-page',
       page: 'font-list'
-    },
-    {
-      tagname: 'connection-list-page',
-      page: 'connection-list'
-    },
-    {
-      tagname: 'scenario-list-page',
-      page: 'scenario-list'
     }
   ],
   bootstrap
