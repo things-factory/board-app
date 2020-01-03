@@ -22,16 +22,20 @@ export default function route(page) {
       import('./pages/play-list-page')
       return page
 
-    case 'publisher-list':
-      import('./pages/publisher-list-page')
-      return page
-
     case 'attachment-list':
       import('./pages/attachment-list-page')
       return page
 
     case 'font-list':
       import('./pages/font-list-page')
+      return page
+
+    case 'connection-list':
+      import('./pages/connection-list-page')
+      return page
+
+    case 'scenario-list':
+      import('./pages/scenario-list-page')
       return page
   }
 }

@@ -110,9 +110,15 @@ export class MenuTools extends connect(store)(LitElement) {
               </a>
             </li>
             <li>
-              <a href="publisher-list" ?active=${this.page == 'publisher-list'}>
-                <mwc-icon>cloud_download</mwc-icon>
-                <div>publisher</div>
+              <a href="connection-list" ?active=${this.page == 'connection-list'}>
+                <mwc-icon>device_hub</mwc-icon>
+                <div>connection</div>
+              </a>
+            </li>
+            <li>
+              <a href="scenario-list" ?active=${this.page == 'scenario-list'}>
+                <mwc-icon>format_list_numbered</mwc-icon>
+                <div>scenario</div>
               </a>
             </li>
           </ul>
