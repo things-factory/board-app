@@ -1,38 +1,11 @@
-import { html, css } from 'lit-element'
-import { PageView } from '@things-factory/shell'
-import "@things-factory/integration-ui/client/pages/connection";
+import { Connection } from "@things-factory/integration-ui/client/pages/connection";
 
-export class ConnectionListPage extends PageView {
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: flex;
-          overflow: hidden;
-        }
-
-        connection-page {
-          flex: 1;
-        }
-      `
-    ]
-  }
-
-  static get properties() {
-    return {}
-  }
-
+class ConnectionListPage extends Connection {
   get context() {
     return {
-      title: 'connection list',
+      ...super.context,
       board_topmenu: true
     }
-  }
-
-  render() {
-    return html`
-      <connection-page active=true></connection-page>
-    `
   }
 }
 
