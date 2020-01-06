@@ -220,10 +220,8 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     return this.appendBoards()
   }
 
-  updated(change) {
-    if (change.has('groupId')) {
-      this.refreshBoards()
-    }
+  async pageInitialized() {
+    this.refresh()
   }
 
   async pageUpdated(changes, lifecycle) {

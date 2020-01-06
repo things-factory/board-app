@@ -126,7 +126,12 @@ class PlayListPage extends connect(store)(PageView) {
 
     this._showSpinner = true
 
-    this.boards = this.groupId ? (await fetchPlayGroup(this.groupId)).playGroup.boards : []
+    if (this.groupId) {
+      var playGroup = (await fetchPlayGroup(this.groupId)).playGroup
+      this.boards = playGroup ? playGroup.boards : []
+    } else {
+      this.boards = []
+    }
 
     this.updateContext()
 
@@ -136,6 +141,10 @@ class PlayListPage extends connect(store)(PageView) {
     list.style.transform = `translate3d(0, 0, 0)`
 
     this._showSpinner = false
+  }
+
+  async pageInitialized() {
+    this.refresh()
   }
 
   async pageUpdated(changes, lifecycle) {
@@ -150,9 +159,7 @@ class PlayListPage extends connect(store)(PageView) {
   }
 
   stateChanged(state) {
-    if (this.active) {
-      this.favorites = state.favorite.favorites
-    }
+    this.favorites = state.favorite.favorites
   }
 
   firstUpdated() {
