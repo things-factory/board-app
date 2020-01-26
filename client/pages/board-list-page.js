@@ -1,15 +1,8 @@
 import '@material/mwc-fab'
 import { openOverlay } from '@things-factory/layout-base'
-import {
-  client,
-  InfiniteScrollable,
-  navigate,
-  PageView,
-  pulltorefresh,
-  ScrollbarStyles,
-  store,
-  swipe
-} from '@things-factory/shell'
+import { client, InfiniteScrollable, navigate, PageView, store } from '@things-factory/shell'
+import { pulltorefresh, swipe } from '@things-factory/utils'
+import { ScrollbarStyles } from '@things-factory/styles'
 import gql from 'graphql-tag'
 import { css, html } from 'lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
