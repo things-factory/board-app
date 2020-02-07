@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/board-app",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -53,7 +53,6 @@
     "@things-factory/resource-ui": "^2.0.0",
     "@things-factory/screencast-ui": "^2.0.0",
     "@things-factory/setting-ui": "^2.0.0",
-    "@things-factory/shell": "^2.0.0",
     "@things-factory/system-ui": "^2.0.0",
     "@things-scene/chartjs": "*",
     "@things-scene/clock": "*",
@@ -70,6 +69,7 @@
     "@things-scene/grist": "*",
     "@things-scene/half-roundrect": "*",
     "@things-scene/indoor-map": "*",
+    "@things-scene/integration": "*",
     "@things-scene/label": "*",
     "@things-scene/legend": "*",
     "@things-scene/marker": "*",
@@ -81,6 +81,7 @@
     "@things-scene/switch": "*",
     "@things-scene/tab": "*",
     "@things-scene/table": "*",
+    "@things-scene/timer": "*",
     "@things-scene/visualizer": "*",
     "@things-scene/wheel-sorter": "*"
   },
