@@ -1,4 +1,3 @@
-import '@material/mwc-fab'
 import { openOverlay } from '@things-factory/layout-base'
 import { client, InfiniteScrollable, navigate, PageView, store } from '@things-factory/shell'
 import { pulltorefresh, swipe } from '@things-factory/utils'
