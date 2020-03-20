@@ -87,5 +87,8 @@
   },
   "devDependencies": {
     "@things-factory/board-test": "^2.0.0"
+  },
+  "resolutions": {
+    "**/graphql-upload": "^9.0.0"
   }
 }
