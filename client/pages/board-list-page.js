@@ -243,7 +243,7 @@ class BoardListPage extends connect(store)(InfiniteScrollable(PageView)) {
     })
 
     swipe({
-      container: this.shadowRoot,
+      container: list,
       animates: {
         dragging: async (d, opts) => {
           var groups = [{ id: '' }, { id: 'favor' }, ...this.groups]

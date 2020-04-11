@@ -176,7 +176,7 @@ class PlayListPage extends connect(store)(PageView) {
     })
 
     swipe({
-      container: this.shadowRoot,
+      container: list,
       animates: {
         dragging: async (d, opts) => {
           var groups = this.groups
