@@ -1,4 +1,14 @@
 {
   "label.information": "information",
-  "label.play-group": "play group"
+  "label.play-group": "play group",
+  "field.status": "status",
+  "field.user-type": "jenis pengguna",
+  "label.activated-user": "diaktifkan",
+  "label.admin-user": "admin",
+  "label.banned-user": "disenarai hitam",
+  "label.common-user": "pengguna biasa",
+  "label.deleted-user": "pengguna dihapus",
+  "label.inactive-user": "tidak aktif",
+  "label.locked-user": "dikunci",
+  "text.user management": "pengurusan pengguna"
 }

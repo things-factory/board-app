@@ -1,4 +1,14 @@
 {
   "label.information": "information",
-  "label.play-group": "play group"
+  "label.play-group": "play group",
+  "field.status": "状态",
+  "field.user-type": "用户类型",
+  "label.activated-user": "用户已激活",
+  "label.admin-user": "管理用户",
+  "label.banned-user": "黑名单用户",
+  "label.common-user": "普通用户",
+  "label.deleted-user": "已删除用户",
+  "label.inactive-user": "非活动用户",
+  "label.locked-user": "用户已锁定",
+  "text.user management": "用户管理"
 }

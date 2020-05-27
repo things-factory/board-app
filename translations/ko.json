@@ -1,4 +1,14 @@
 {
   "label.information": "기본정보",
-  "label.play-group": "플레이그룹"
+  "label.play-group": "플레이그룹",
+  "field.status": "상태",
+  "field.user-type": "사용자유형",
+  "label.activated-user": "정상",
+  "label.admin-user": "관리자",
+  "label.banned-user": "사용금지",
+  "label.common-user": "일반",
+  "label.deleted-user": "삭제됨",
+  "label.inactive-user": "비활성",
+  "label.locked-user": "잠김",
+  "text.user management": "사용자 관리"
 }

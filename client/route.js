@@ -37,5 +37,9 @@ export default function route(page) {
     case 'scenario-list':
       import('./pages/scenario-list-page')
       return page
+
+    case 'user-management':
+      import('./pages/user-management-page')
+      return page
   }
 }

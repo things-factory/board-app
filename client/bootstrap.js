@@ -1,6 +1,8 @@
 import { APPEND_APP_TOOL } from '@things-factory/apptool-base'
 import { appendViewpart, updateViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
-import { store, UPDATE_BASE_URL } from '@things-factory/shell'
+import { ADD_MORENDA } from '@things-factory/more-base'
+import { store, navigate, UPDATE_BASE_URL } from '@things-factory/shell'
+import { auth } from '@things-factory/auth-base'
 import { ADD_SETTING } from '@things-factory/setting-base'
 import '@things-factory/setting-ui/client/setting-lets/domain-switch-let'
 
@@ -32,9 +34,7 @@ export default function bootstrap() {
     name: 'board-topmenu',
     viewpart: {
       show: true,
-      template: html`
-        <menu-tools></menu-tools>
-      `
+      template: html` <menu-tools></menu-tools> `
     },
     position: VIEWPART_POSITION.NAVBAR
   })
@@ -59,9 +59,7 @@ export default function bootstrap() {
   store.dispatch({
     type: APPEND_APP_TOOL,
     tool: {
-      template: html`
-        <favorite-tool .acceptedPages=${acceptedPages}></favorite-tool>
-      `,
+      template: html` <favorite-tool .acceptedPages=${acceptedPages}></favorite-tool> `,
       position: TOOL_POSITION.REAR
     }
   })
@@ -71,9 +69,25 @@ export default function bootstrap() {
     type: ADD_SETTING,
     setting: {
       seq: 30,
-      template: html`
-        <domain-switch-let></domain-switch-let>
-      `
+      template: html` <domain-switch-let></domain-switch-let> `
     }
+  })
+
+  /* 사용자 signin/signout 에 따라서, setting 변경 */
+  auth.on('profile', async ({ credential }) => {
+    if (credential.userType != 'admin') {
+      return
+    }
+
+    store.dispatch({
+      type: ADD_MORENDA,
+      morenda: {
+        icon: html` <mwc-icon>people</mwc-icon> `,
+        name: html` <i18n-msg msgid="text.user management"></i18n-msg> `,
+        action: () => {
+          navigate('user-management')
+        }
+      }
+    })
   })
 }

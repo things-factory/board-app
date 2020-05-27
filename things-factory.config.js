@@ -41,6 +41,10 @@ export default {
     {
       tagname: 'scenario-list-page',
       page: 'scenario-list'
+    },
+    {
+      tagname: 'user-management-page',
+      page: 'user-management'
     }
   ],
   bootstrap

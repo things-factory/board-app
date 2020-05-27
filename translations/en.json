@@ -1,4 +1,14 @@
 {
   "label.information": "information",
-  "label.play-group": "play group"
+  "label.play-group": "play group",
+  "field.status": "status",
+  "field.user-type": "user type",
+  "label.activated-user": "activated",
+  "label.admin-user": "admin",
+  "label.banned-user": "banned",
+  "label.common-user": "common",
+  "label.deleted-user": "deleted",
+  "label.inactive-user": "inactive",
+  "label.locked-user": "locked",
+  "text.user management": "user management"
 }
