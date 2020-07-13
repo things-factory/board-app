@@ -1,5 +1,11 @@
 import { APPEND_APP_TOOL } from '@things-factory/apptool-base'
-import { appendViewpart, updateViewpart, TOOL_POSITION, VIEWPART_POSITION } from '@things-factory/layout-base'
+import {
+  appendViewpart,
+  updateViewpart,
+  TOOL_POSITION,
+  VIEWPART_POSITION,
+  VIEWPART_LEVEL
+} from '@things-factory/layout-base'
 import { ADD_MORENDA } from '@things-factory/more-base'
 import { store, navigate, UPDATE_BASE_URL } from '@things-factory/shell'
 import { auth } from '@things-factory/auth-base'
@@ -49,7 +55,8 @@ export default function bootstrap() {
     width = state.layout.width
 
     updateViewpart('board-topmenu', {
-      position: width == 'WIDE' ? VIEWPART_POSITION.NAVBAR : VIEWPART_POSITION.FOOTERBAR
+      position: width == 'WIDE' ? VIEWPART_POSITION.NAVBAR : VIEWPART_POSITION.FOOTERBAR,
+      level: VIEWPART_LEVEL.TOPMOST
     })
   })
 
